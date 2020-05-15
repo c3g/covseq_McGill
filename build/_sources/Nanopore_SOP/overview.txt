@@ -1,0 +1,16 @@
+Nanopore ARTIC-Nanopolish SOP 
+========
+
+Graphical summary 
+========
+
+.. image:: ONT_ArticPipelineDigaram.png
+  :scale: 20%
+  :align: center
+
+Description 
+========
+
+The SOP for Nanopore data is based on the ARTIC SARS-CoV2 protocol using nanopolish. Their full documentation is found `here`_.
+
+.. _here : https://artic.network/ncov-2019/ncov2019-bioinformatics-sop.html  
