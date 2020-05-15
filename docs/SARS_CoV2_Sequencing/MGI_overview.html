@@ -1,0 +1,421 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MGI CleanPlex SOP &mdash; McGill COVID-19 Sequencing SOP  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Illumina ARTIC SOP" href="Illumina_overview.html" />
+    <link rel="prev" title="Nanopore ARTIC-Nanopolish SOP" href="ONT_overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> McGill COVID-19 Sequencing SOP
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">Québec SARS-CoV-2 Sequencing Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ONT_overview.html">Nanopore ARTIC-Nanopolish SOP</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MGI CleanPlex SOP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#graphical-summary">Graphical summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#steps">Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-genome-and-software-versions">Reference Genome and Software Versions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Illumina_overview.html">Illumina ARTIC SOP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../COVID19_BioBank/overview.html">COVID-19 BioBank SOP</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">McGill COVID-19 Sequencing SOP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>MGI CleanPlex SOP</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/SARS_CoV2_Sequencing/MGI_overview.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mgi-cleanplex-sop">
+<h1>MGI CleanPlex SOP<a class="headerlink" href="#mgi-cleanplex-sop" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="graphical-summary">
+<h2>Graphical summary<a class="headerlink" href="#graphical-summary" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/MGI_CleanplexPipeline.png"><img alt="../_images/MGI_CleanplexPipeline.png" class="align-center" src="../_images/MGI_CleanplexPipeline.png" style="width: 666.6px; height: 375.0px;" /></a>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The MGI analysis pipeline is based on the steps suggested by <em>Paragon Genomics</em>, the manufacturer of the
+<code class="docutils literal notranslate"><span class="pre">CleanPlex</span></code> amplicon panel, with important modifications to improve performance.</p>
+<div class="section" id="steps">
+<h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><strong>Trim sequencing adaptor with cutadapt</strong></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cutadapt -g GAACGACATGGCTACGATCCGACTT \
+  -G GACCGCTTGGCCTCCGACTT \
+  -a AAGTCGGAGGCCAAGCGGTC \
+  -A AAGTCGGATCGTAGCCATGTCGTTC \
+  -j 15 \
+  -e 0.1 -O 9 -m 20 -n 2 \
+  -o trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz \
+  -p trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz  \
+ ${INPUT_FASTQ1}  \
+ ${INPUT_FASTQ2}
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><strong>Align read with BWA-MEM</strong></li>
+</ol>
+<p>Multimapping reads are filtered (<code class="docutils literal notranslate"><span class="pre">MAPQ</span> <span class="pre">=</span> <span class="pre">0</span></code>).:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p alignment/${SAMPLE}/${SAMPLE} &amp;&amp; \
+bwa mem  \
+  -K 100000000 -v 3 -t 15 -Y \
+  -R &#39;@RG\tID:${SAMPLE}\tSM:${SAMPLE}\tLB:PROD_000034-A12\tPU:run1_4\tCN:\tPL:MGI&#39; \
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><strong>Trim Amplicon PCR primers</strong></li>
+</ol>
+<p>Using <code class="docutils literal notranslate"><span class="pre">ivar</span></code> with the <code class="docutils literal notranslate"><span class="pre">-e</span></code> parameter.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p alignment/${SAMPLE} &amp;&amp; \
+ivar trim -i alignment/${SAMPLE}/${SAMPLE}.sorted.bam
+  -p alignment/${SAMPLE}/${SAMPLE}.primerTrim \
+  -b Coronavirinae.SARS-CoV-2/PGD99s.ampInfo.bed \
+  -m 30 -q 20 -s 4 -e &amp;&amp; \
+sambamba sort -m 10G \
+  alignment/${SAMPLE}/${SAMPLE}.primerTrim.bam \
+  --tmpdir ${TMPDIR} \
+  --out alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><strong>Call variants</strong></li>
+</ol>
+<p>Variants are called with <code class="docutils literal notranslate"><span class="pre">samtools</span></code> and <code class="docutils literal notranslate"><span class="pre">ivar</span></code>.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p alignment/${SAMPLE} &amp;&amp; \
+samtools mpileup -A -d 600000 -B -Q 0 -l Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+  -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam | \
+ivar variants -p alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim \
+  -r Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+  -g Coronavirinae.SARS-CoV-2/SARS-CoV-2.gff3 \
+  -m 20 -q 20 -t 0.5 &amp;&amp; \
+ivar_variants_to_vcf.py alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.tsv alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf &amp;&amp; \
+bgzip -cf alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf &gt; alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf.gz &amp;&amp; \
+tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf.gz
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><strong>Generate consensus FASTA</strong></li>
+</ol>
+<p>Using <code class="docutils literal notranslate"><span class="pre">ivar</span> <span class="pre">consensus</span></code>.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p alignment/${SAMPLE} &amp;&amp; \
+samtools mpileup -aa -A -d 0 -Q 0 \
+  -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam | \
+ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.consensus -q 20 -t 0 -m
+</pre></div>
+</div>
+<ol class="arabic simple" start="6">
+<li><strong>Compute metrics</strong></li>
+</ol>
+<p>A series of scripts compute several metrics derived from the output of the analysis above. Here are the full set
+of commands used to generate these metrics.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#alignment and insert size metrics
+module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 mugqic/R_Bioconductor/3.6.1_3.10 &amp;&amp; \
+mkdir -p metrics/dna/${SAMPLE}/picard_metrics &amp;&amp; \
+gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+  CollectMultipleMetrics \
+  --PROGRAM=CollectAlignmentSummaryMetrics \
+  --PROGRAM=CollectInsertSizeMetrics \
+  --VALIDATION_STRINGENCY=SILENT \
+  --TMP_DIR=${TMPDIR} \
+  --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+  --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+  --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.all.metrics \
+  --MAX_RECORDS_IN_RAM=1000000
+
+#OxoG metrics
+module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 mugqic/R_Bioconductor/3.6.1_3.10 &amp;&amp; \
+mkdir -p metrics/dna/${SAMPLE}/picard_metrics &amp;&amp; \
+gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+  CollectOxoGMetrics \
+  --VALIDATION_STRINGENCY=SILENT  \
+  --TMP_DIR=${TMPDIR} \
+  --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+  --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.oxog_metrics.txt \
+  --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+  --MAX_RECORDS_IN_RAM=4000000
+
+#GC biais metrics
+module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 mugqic/R_Bioconductor/3.6.1_3.10 &amp;&amp; \
+mkdir -p metrics/dna/${SAMPLE}/picard_metrics &amp;&amp; \
+gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+  CollectGcBiasMetrics \
+  --VALIDATION_STRINGENCY=SILENT \
+  --ALSO_IGNORE_DUPLICATES=TRUE \
+  --TMP_DIR=${TMPDIR} \
+  --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+  --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_metrics.txt \
+  --CHART=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_metrics.pdf \
+  --SUMMARY_OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_summary_metrics.txt \
+  --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+  --MAX_RECORDS_IN_RAM=4000000
+
+#qualimap metrics
+module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/qualimap/2.2.1 &amp;&amp; \
+mkdir -p metrics/dna/${SAMPLE}/qualimap &amp;&amp; \
+qualimap bamqc -nt 10 \
+  -bam alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam -outdir metrics/dna/${SAMPLE}/qualimap \
+  --java-mem-size=55G
+
+#flagstats metrics primerTrimed
+module load mugqic/sambamba/0.7.0 &amp;&amp; \
+mkdir -p metrics/dna/${SAMPLE}/flagstat &amp;&amp; \
+sambamba flagstat  \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+  &gt; metrics/dna/${SAMPLE}/flagstat/${SAMPLE}.sorted.primerTrim.flagstat
+
+#bedGraph generation primerTrimmed
+module load mugqic_dev/bedtools/2.29.2 &amp;&amp; \
+mkdir -p alignment/${SAMPLE} &amp;&amp; \
+bedtools genomecov -bga \
+  -ibam alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam &gt; alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.BedGraph
+
+#hs metrics
+module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 &amp;&amp; \
+gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+  CollectHsMetrics \
+  --TMP_DIR=${TMPDIR} \
+  --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+  --OUTPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.onTarget.tsv \
+  --BAIT_INTERVALS=Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.interval_list \
+  --TARGET_INTERVALS=SARSCoV2.ampInsert.interval_list \
+  --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa
+
+#depth of coverage
+module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/3.8 &amp;&amp; \
+java -Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=2 -Xmx8000M -jar $GATK_JAR \
+  --analysis_type DepthOfCoverage --omitDepthOutputAtEachBase --logging_level ERROR \
+  --reference_sequence Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+  --input_file alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+  --out alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.all.coverage \
+  --intervals Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+  --summaryCoverageThreshold 10 \
+  --summaryCoverageThreshold 25 \
+  --summaryCoverageThreshold 50 \
+  --summaryCoverageThreshold 75 \
+  --summaryCoverageThreshold 100 \
+  --summaryCoverageThreshold 500 \
+  --start 1 --stop 500 \
+  --nBins 499 \
+  --downsampling_type NONE
+
+module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/bvatools/1.6 &amp;&amp; \
+java -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx31G -jar $BVATOOLS_JAR \
+  depthofcoverage --gc --maxDepth 1001 --summaryCoverageThresholds 10,25,50,75,100,500,1000 --minMappingQuality 15 --minBaseQuality 15 --ommitN \
+  --threads 8 \
+  --ref Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+  --intervals Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+  --bam alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+  &gt; alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.coverage.tsv
+
+#generate tdf file
+module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/igvtools/2.3.67 &amp;&amp; \
+ java -Xmx8G  -Djava.awt.headless=true -jar $IGVTOOLS_JAR count -f min,max,mean -w 25 \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.tdf \
+  Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa.fai
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-genome-and-software-versions">
+<h3>Reference Genome and Software Versions<a class="headerlink" href="#reference-genome-and-software-versions" title="Permalink to this headline">¶</a></h3>
+<p><strong>Reference Genome:</strong> Severe acute respiratory syndrome coronavirus 2 isolate Wuhan-Hu-1 (GenBank MN908947.3)</p>
+<p><strong>Software versions</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Cutadapt</span> <span class="n">v2</span><span class="o">.</span><span class="mi">10</span>
+<span class="n">bwa</span><span class="o">-</span><span class="n">mem</span> <span class="n">v0</span><span class="o">.</span><span class="mf">7.17</span>
+<span class="n">sambamba</span> <span class="n">v0</span><span class="o">.</span><span class="mf">7.0</span>
+<span class="n">ivar</span> <span class="n">v1</span><span class="o">.</span><span class="mf">2.2</span>
+<span class="n">samtools</span> <span class="n">v1</span><span class="o">.</span><span class="mi">9</span>
+<span class="n">bvatools</span> <span class="n">v1</span><span class="o">.</span><span class="mi">6</span>
+<span class="n">bedtools</span> <span class="n">v2</span><span class="o">.</span><span class="mf">29.2</span>
+<span class="n">GATK</span> <span class="n">v4</span><span class="o">.</span><span class="mf">1.2</span> <span class="ow">and</span> <span class="n">v3</span><span class="o">.</span><span class="mi">8</span>
+<span class="n">igvtools</span> <span class="n">v2</span><span class="o">.</span><span class="mf">3.67</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Illumina_overview.html" class="btn btn-neutral float-right" title="Illumina ARTIC SOP" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ONT_overview.html" class="btn btn-neutral float-left" title="Nanopore ARTIC-Nanopolish SOP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, C3G
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

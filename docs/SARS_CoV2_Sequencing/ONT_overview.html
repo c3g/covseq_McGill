@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Nanopore ARTIC-Nanopolish SOP &mdash; McGill COVID-19 Sequencing SOP  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MGI CleanPlex SOP" href="MGI_overview.html" />
+    <link rel="prev" title="Québec SARS-CoV-2 Sequencing Project" href="about.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> McGill COVID-19 Sequencing SOP
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">Québec SARS-CoV-2 Sequencing Project</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Nanopore ARTIC-Nanopolish SOP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#graphical-summary">Graphical summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#steps">Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-genome-and-software-versions">Reference Genome and Software Versions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="MGI_overview.html">MGI CleanPlex SOP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Illumina_overview.html">Illumina ARTIC SOP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../COVID19_BioBank/overview.html">COVID-19 BioBank SOP</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">McGill COVID-19 Sequencing SOP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Nanopore ARTIC-Nanopolish SOP</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/SARS_CoV2_Sequencing/ONT_overview.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="nanopore-artic-nanopolish-sop">
+<h1>Nanopore ARTIC-Nanopolish SOP<a class="headerlink" href="#nanopore-artic-nanopolish-sop" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="graphical-summary">
+<h2>Graphical summary<a class="headerlink" href="#graphical-summary" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/ONT_ArticPipelineDigaram.png"><img alt="../_images/ONT_ArticPipelineDigaram.png" class="align-center" src="../_images/ONT_ArticPipelineDigaram.png" style="width: 666.6px; height: 375.0px;" /></a>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The SOP for Nanopore data is based on the ARTIC SARS-CoV2 protocol using nanopolish.
+Their full documentation is found <a class="reference external" href="https://artic.network/ncov-2019/ncov2019-bioinformatics-sop.html">here</a>.</p>
+<p>The protocol was closely followed with the majority of changes, involving technical adaptations
+to be able to run in a High Performance Computing environment where the usage Conda is not advisable.</p>
+<div class="section" id="steps">
+<h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><strong>Base calling with Guppy</strong></li>
+</ol>
+<p>Raw reads are base-called with Guppy using the High Accuracy Model (flip-flop) and a minimun quality
+threshold of <code class="docutils literal notranslate"><span class="pre">7</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>SAMPLE=&quot;run_name&quot;
+INPUT=&quot;/path/to/fast5/&quot;
+OUTPUT=&quot;/path/to/fastq/&quot;
+PROTOCOL=&quot;dna_r9.4.1_450bps_hac.cfg&quot;
+MINQ=7
+GPUPARAMS=&quot;&quot;
+RDSPERFILE=4000
+OTHER_OPTIONS=&quot;&quot;
+
+guppy_basecaller --input_path ${INPUT} \
+   --recursive \
+   --device auto \
+   --save_path ${OUTPUT} \
+   --config ${PROTOCOL} \
+   --qscore_filtering --min_qscore ${MINQ} \
+   --compress_fastq ${GPUPARAMS} \
+   --records_per_fastq ${RDSPERFILE} \
+   --disable_pings ${OTHER_OPTIONS} \
+   --verbose |&amp; tee -a ${OUTDIR}/${SAMPLE}.guppy.log
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><strong>Demultiplexing with Guppy</strong></li>
+</ol>
+<p>Reads were demultiplexed using Guppy. The option <code class="docutils literal notranslate"><span class="pre">--require_barcodes_both_ends</span></code> is activated. Since
+regular nanopore barcodes were used, the demultiplex command points to the nanopore barcode config files.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>INPUT=&quot;/path/to/fastq/&quot;
+OUTPUT=&quot;/path/to/demultiplex/&quot;
+
+guppy_barcoder --require_barcodes_both_ends \
+    --input_path ${INPUT} \
+    --save_path ${OUTPUT} \
+    --arrangements_files &quot;barcode_arrs_nb12.cfg barcode_arrs_nb24.cfg&quot; \
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><strong>ARTIC-Nanopolish pipeline</strong></li>
+</ol>
+<p>Since some HPC environments like Compute Canada don’t support python package managers like Conda, the python
+environment to use a tool like the ARTIC protocol needs to be defined initially, before running the pipeline.
+Compute Canada maintains several python package wheels internally, so several dependencies are already met,
+however, others had to be manually downloaded and compiled. In this case, they were all deposited in a folder
+saved as an environment variable called <code class="docutils literal notranslate"><span class="pre">$PYTHON_WHL</span></code>. Each <code class="docutils literal notranslate"><span class="pre">SLURM</span></code> job, then uses the following code to setup
+the python environment and actiavte it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export ENVDIR=&quot;${SLURM_TMPDIR}/env&quot;
+export PYTHON_WHL=&quot;/path/to/python/wheels/&quot;
+export ARTIC_WHL=&quot;/path/to/artic.whl&quot;
+
+virtualenv --no-download ${ENVDIR}
+source ${ENVDIR}/bin/activate
+pip install --no-index --upgrade pip
+pip install --no-index biopython
+pip install --no-deps ${PYTHON_WHL}/clint-0.5.1/dist/clint-0.5.1-py3-none-any.whl
+pip install --no-index pandas
+pip install --no-index pysam
+pip install --no-index pytest
+pip install --no-deps ${PYTHON_WHL}/PyVCF-0.6.8/dist/PyVCF-0.6.8-py3-none-any.whl
+pip install --no-index requests
+pip install --no-index tqdm
+pip install --no-deps ${PYTHON_WHL}/whatshap-0.18/dist/whatshap-0.18-cp36-cp36m-linux_x86_64.whl
+pip install --no-deps ${ARTIC_WHL}
+</pre></div>
+</div>
+<p>3.1 <strong>Read size filtering</strong></p>
+<p>Using the ARTIC <code class="docutils literal notranslate"><span class="pre">guppyplex</span></code> tool, we filter the reads that don’t fit into the expected lengths.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MIN_LENGTH=&quot;400&quot;
+MAX_LENGTH=&quot;700&quot;
+FASTQ_DIR=&quot;/path/to/demultiplex/fatsq&quot;
+POOL=&quot;pool_name&quot;
+
+artic guppyplex \
+   --min-length ${MIN_LENGTH} \
+   --max-length ${MAX_LENGTH} \
+   --directory ${FASTQ_DIR} \
+   --prefix ${POOL}
+</pre></div>
+</div>
+<p>3.2. <strong>Run ARTIC Nanopolish pipeline</strong></p>
+<p>Run the ARTIC nanopolish pipeline using the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>NORMALISE=&quot;800&quot;
+THREADS=&quot;16&quot;
+PRIMERS_DIR=&quot;/path/to/pimers/dir/&quot;
+POOL=&quot;pool_name&quot;
+BARCODE=&quot;barcodeXX&quot;
+FAST5_DIR=&quot;/path/to/fast5/&quot;
+SUMMARY=&quot;/path/to/sequencing_summary.txt&quot;
+PRIMERS_VER=&quot;nCoV-2019/V3&quot;
+SAMPLE=&quot;sample_name&quot;
+
+artic minion \
+    --normalise ${NORMALISE} \
+    --threads ${THREADS} \
+    --scheme-directory ${PRIMERS_DIR} \
+    --read-file ${POOL}_${BARCODE}.fastq \
+    --fast5-directory ${FAST5_DIR} \
+    --sequencing-summary ${SUMMARY} \
+    ${PRIMERS_VER} \
+    ${SAMPLE} |&amp; tee -a ${SAMPLE}_nanopolish.log
+</pre></div>
+</div>
+<p>The above command actually runs the following tools:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>nanopolish index -s ${SUMMARY} -d ${OUTDIR}
+minimap2 -a -x map-ont -t 16 primer_schemes/nCoV-2019/V3/nCoV-2019.reference.fasta ${POOL}_${BARCODE}.fastq | samtools view -bS -F 4 - | samtools sort -o ${SAMPLE}
+samtools index ${SAMPLE}.sorted.bam
+align_trim --start --normalise 800 primer_schemes/nCoV-2019/V3/nCoV-2019.scheme.bed --report ${SAMPLE}.alignreport.txt &lt; ${SAMPLE}.sorted.bam 2&gt; ${SAMPLE}
+align_trim --normalise 800 primer_schemes/nCoV-2019/V3/nCoV-2019.scheme.bed --remove-incorrect-pairs --report ${SAMPLE}.alignreport.txt &lt; ${SAMPLE}.sorted
+samtools index ${SAMPLE}.trimmed.rg.sorted.bam
+samtools index ${SAMPLE}.primertrimmed.rg.sorted.bam
+nanopolish variants --min-flanking-sequence 10 -x 1000000 --progress -t 16 --reads ${POOL}_${BARCODE}.fastq -o ${SAMPLE}.nCoV-2019_2.vcf -b ${SAMPLE}.trimmed.rg.sorted.bam -g /lustre03/project/6007512/C3G/projects/Moreira_COVID19_Genotyping/artic
+nanopolish variants --min-flanking-sequence 10 -x 1000000 --progress -t 16 --reads ${POOL}_${BARCODE}.fastq -o ${SAMPLE}.nCoV-2019_1.vcf -b ${SAMPLE}.trimmed.rg.sorted.bam -g /lustre03/project/6007512/C3G/projects/Moreira_COVID19_Genotyping/artic
+artic_vcf_merge ${SAMPLE} primer_schemes/nCoV-2019/V3/nCoV-2019.scheme.bed nCoV-2019_2:${SAMPLE}.nCoV-2019_2.vcf nCoV-2019_1:${SAMPLE}.nCoV-2019_1.v
+artic_vcf_filter --nanopolish ${SAMPLE}.merged.vcf ${SAMPLE}.pass.vcf ${SAMPLE}.fail.vcf
+artic_make_depth_mask primer_schemes/nCoV-2019/V3/nCoV-2019.reference.fasta ${SAMPLE}.primertrimmed.rg.sorted.bam ${SAMPLE}.coverage_mask.txt
+bgzip -f ${SAMPLE}.pass.vcf
+tabix -p vcf ${SAMPLE}.pass.vcf.gz
+artic_mask primer_schemes/nCoV-2019/V3/nCoV-2019.reference.fasta ${SAMPLE}.coverage_mask.txt ${SAMPLE}.fail.vcf ${SAMPLE}.preconsensus.fasta
+bcftools consensus -f ${SAMPLE}.preconsensus.fasta ${SAMPLE}.pass.vcf.gz -m ${SAMPLE}.coverage_mask.txt -o ${SAMPLE}.consensus.fasta
+artic_fasta_header ${SAMPLE}.consensus.fasta &quot;${SAMPLE}/ARTIC/nanopolish&quot;
+cat ${SAMPLE}.consensus.fasta primer_schemes/nCoV-2019/V3/nCoV-2019.reference.fasta &gt; ${SAMPLE}.muscle.in.fasta
+muscle -in ${SAMPLE}.muscle.in.fasta -out ${SAMPLE}.muscle.out.fasta
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><strong>Create metrics</strong></li>
+</ol>
+<p>For metrics generation, the following tools are run:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">samtools</span></code> for general alignment stats.</li>
+<li><code class="docutils literal notranslate"><span class="pre">bedtools</span></code> for coverage metrics</li>
+<li><code class="docutils literal notranslate"><span class="pre">WUB</span></code> for additional alignment metrics see this <a class="reference external" href="https://github.com/nanoporetech/wub">repository</a>.</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>REFERENCE=&quot;/path/to/SARS-CoV2/reference.fasta&quot;
+SAMPLE=&quot;sample_name&quot;
+SORTED_BAM=&quot;/path/to/${SAMPLE}.sorted.bam&quot;
+
+samtools view -@ 4 -F 0x900 \
+    --output-fmt BAM \
+    --reference ${REFERENCE} \
+    -o ${SAMPLE}.nosup.bam \
+    ${SORTED_BAM}
+
+samtools sort -@ 4 --reference ${REFERENCE} \
+    --output-fmt BAM \
+    -o ${SAMPLE}.nosup.sorted.bam \
+    ${SAMPLE}.nosup.bam
+
+samtools index -@ 5 -b ${SAMPLE}.nosup.sorted.bam
+
+bedtools genomecov -bga -ibam ${SAMPLE}.nosup.bam &gt; ${SAMPLE}.nosup.bedGraph
+bedtools genomecov -ibam ${SAMPLE}.nosup.bam &gt; ${SAMPLE}.nosup.histogram
+samtools stats ${SAMPLE}.nosup.bam &gt; ${SAMPLE}.nosup.bam.stats
+samtools depth ${SAMPLE}.nosup.bam &gt; ${SAMPLE}.nosup.bam.depth
+
+python ${WUB}/scripts/bam_alignment_qc.py -f ${REFERENCE} ${SAMPLE}.nosup.sorted.bam
+</pre></div>
+</div>
+<p>Plotting and reporting is done using a combination of R scripts that parse the BAM, VCF and metrics files.</p>
+</div>
+<div class="section" id="reference-genome-and-software-versions">
+<h3>Reference Genome and Software Versions<a class="headerlink" href="#reference-genome-and-software-versions" title="Permalink to this headline">¶</a></h3>
+<p><strong>Reference Genome:</strong> Severe acute respiratory syndrome coronavirus 2 isolate Wuhan-Hu-1 (GenBank MN908947.3)</p>
+<p><strong>Software versions</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">guppy</span><span class="o">-</span><span class="n">GPU</span> <span class="n">v3</span><span class="o">.</span><span class="mf">4.4</span>
+<span class="n">minimap2</span> <span class="n">v2</span><span class="o">.</span><span class="mi">17</span>
+<span class="n">samtools</span> <span class="n">v1</span><span class="o">.</span><span class="mi">9</span>
+<span class="n">bcftools</span> <span class="n">v1</span><span class="o">.</span><span class="mi">9</span>
+<span class="n">bedtools</span> <span class="n">v2</span><span class="o">.</span><span class="mf">27.0</span>
+<span class="n">python</span> <span class="n">v3</span><span class="o">.</span><span class="mi">6</span>
+<span class="n">nanopolish</span> <span class="n">v0</span><span class="o">.</span><span class="mf">13.1</span>
+<span class="n">muscle</span> <span class="n">v3</span><span class="o">.</span><span class="mf">8.31</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="MGI_overview.html" class="btn btn-neutral float-right" title="MGI CleanPlex SOP" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="about.html" class="btn btn-neutral float-left" title="Québec SARS-CoV-2 Sequencing Project" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, C3G
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

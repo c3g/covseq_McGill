@@ -1,0 +1,215 @@
+MGI CleanPlex SOP
+================================================================================
+
+
+Graphical summary 
+________________________________________________________________________________
+
+.. image:: MGI_CleanplexPipeline.png
+  :scale: 20%
+  :align: center
+
+Description
+________________________________________________________________________________
+
+The MGI analysis pipeline is based on the steps suggested by *Paragon Genomics*, the manufacturer of the 
+``CleanPlex`` amplicon panel, with important modifications to improve performance. 
+
+
+Steps 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. **Trim sequencing adaptor with cutadapt**
+
+::
+
+    cutadapt -g GAACGACATGGCTACGATCCGACTT \
+      -G GACCGCTTGGCCTCCGACTT \
+      -a AAGTCGGAGGCCAAGCGGTC \
+      -A AAGTCGGATCGTAGCCATGTCGTTC \
+      -j 15 \
+      -e 0.1 -O 9 -m 20 -n 2 \
+      -o trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz \
+      -p trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz  \
+     ${INPUT_FASTQ1}  \
+     ${INPUT_FASTQ2} 
+
+2. **Align read with BWA-MEM**
+
+Multimapping reads are filtered (``MAPQ = 0``).::
+
+    mkdir -p alignment/${SAMPLE}/${SAMPLE} && \
+    bwa mem  \
+      -K 100000000 -v 3 -t 15 -Y \
+      -R '@RG\tID:${SAMPLE}\tSM:${SAMPLE}\tLB:PROD_000034-A12\tPU:run1_4\tCN:\tPL:MGI' \
+
+3. **Trim Amplicon PCR primers**
+
+Using ``ivar`` with the ``-e`` parameter.::
+
+    mkdir -p alignment/${SAMPLE} && \
+    ivar trim -i alignment/${SAMPLE}/${SAMPLE}.sorted.bam
+      -p alignment/${SAMPLE}/${SAMPLE}.primerTrim \
+      -b Coronavirinae.SARS-CoV-2/PGD99s.ampInfo.bed \
+      -m 30 -q 20 -s 4 -e && \
+    sambamba sort -m 10G \
+      alignment/${SAMPLE}/${SAMPLE}.primerTrim.bam \
+      --tmpdir ${TMPDIR} \
+      --out alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam
+
+4. **Call variants**
+
+Variants are called with ``samtools`` and ``ivar``.::
+
+    mkdir -p alignment/${SAMPLE} && \
+    samtools mpileup -A -d 600000 -B -Q 0 -l Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+      -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam | \
+    ivar variants -p alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim \
+      -r Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+      -g Coronavirinae.SARS-CoV-2/SARS-CoV-2.gff3 \
+      -m 20 -q 20 -t 0.5 && \
+    ivar_variants_to_vcf.py alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.tsv alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf && \
+    bgzip -cf alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf > alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf.gz && \
+    tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf.gz 
+
+
+5. **Generate consensus FASTA** 
+
+Using ``ivar consensus``.::
+
+    mkdir -p alignment/${SAMPLE} && \
+    samtools mpileup -aa -A -d 0 -Q 0 \
+      -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam | \
+    ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.consensus -q 20 -t 0 -m 
+
+
+6. **Compute metrics** 
+
+A series of scripts compute several metrics derived from the output of the analysis above. Here are the full set
+of commands used to generate these metrics.:: 
+
+    #alignment and insert size metrics
+    module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 mugqic/R_Bioconductor/3.6.1_3.10 && \
+    mkdir -p metrics/dna/${SAMPLE}/picard_metrics && \
+    gatk --java-options "-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
+      CollectMultipleMetrics \
+      --PROGRAM=CollectAlignmentSummaryMetrics \
+      --PROGRAM=CollectInsertSizeMetrics \
+      --VALIDATION_STRINGENCY=SILENT \
+      --TMP_DIR=${TMPDIR} \
+      --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+      --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+      --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.all.metrics \
+      --MAX_RECORDS_IN_RAM=1000000
+    
+    #OxoG metrics
+    module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 mugqic/R_Bioconductor/3.6.1_3.10 && \
+    mkdir -p metrics/dna/${SAMPLE}/picard_metrics && \
+    gatk --java-options "-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
+      CollectOxoGMetrics \
+      --VALIDATION_STRINGENCY=SILENT  \
+      --TMP_DIR=${TMPDIR} \
+      --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+      --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.oxog_metrics.txt \
+      --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+      --MAX_RECORDS_IN_RAM=4000000
+    
+    #GC biais metrics
+    module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 mugqic/R_Bioconductor/3.6.1_3.10 && \
+    mkdir -p metrics/dna/${SAMPLE}/picard_metrics && \
+    gatk --java-options "-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
+      CollectGcBiasMetrics \
+      --VALIDATION_STRINGENCY=SILENT \
+      --ALSO_IGNORE_DUPLICATES=TRUE \
+      --TMP_DIR=${TMPDIR} \
+      --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+      --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_metrics.txt \
+      --CHART=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_metrics.pdf \
+      --SUMMARY_OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_summary_metrics.txt \
+      --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+      --MAX_RECORDS_IN_RAM=4000000
+    
+    #qualimap metrics
+    module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/qualimap/2.2.1 && \
+    mkdir -p metrics/dna/${SAMPLE}/qualimap && \
+    qualimap bamqc -nt 10 \
+      -bam alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam -outdir metrics/dna/${SAMPLE}/qualimap \
+      --java-mem-size=55G
+    
+    #flagstats metrics primerTrimed
+    module load mugqic/sambamba/0.7.0 && \
+    mkdir -p metrics/dna/${SAMPLE}/flagstat && \
+    sambamba flagstat  \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+      > metrics/dna/${SAMPLE}/flagstat/${SAMPLE}.sorted.primerTrim.flagstat
+    
+    #bedGraph generation primerTrimmed
+    module load mugqic_dev/bedtools/2.29.2 && \
+    mkdir -p alignment/${SAMPLE} && \
+    bedtools genomecov -bga \
+      -ibam alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam > alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.BedGraph
+    
+    #hs metrics
+    module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 && \
+    gatk --java-options "-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
+      CollectHsMetrics \
+      --TMP_DIR=${TMPDIR} \
+      --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+      --OUTPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.onTarget.tsv \
+      --BAIT_INTERVALS=Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.interval_list \
+      --TARGET_INTERVALS=SARSCoV2.ampInsert.interval_list \
+      --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa
+    
+    #depth of coverage
+    module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/3.8 && \
+    java -Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=2 -Xmx8000M -jar $GATK_JAR \
+      --analysis_type DepthOfCoverage --omitDepthOutputAtEachBase --logging_level ERROR \
+      --reference_sequence Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+      --input_file alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+      --out alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.all.coverage \
+      --intervals Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+      --summaryCoverageThreshold 10 \
+      --summaryCoverageThreshold 25 \
+      --summaryCoverageThreshold 50 \
+      --summaryCoverageThreshold 75 \
+      --summaryCoverageThreshold 100 \
+      --summaryCoverageThreshold 500 \
+      --start 1 --stop 500 \
+      --nBins 499 \
+      --downsampling_type NONE
+    
+    module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/bvatools/1.6 && \
+    java -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx31G -jar $BVATOOLS_JAR \
+      depthofcoverage --gc --maxDepth 1001 --summaryCoverageThresholds 10,25,50,75,100,500,1000 --minMappingQuality 15 --minBaseQuality 15 --ommitN \
+      --threads 8 \
+      --ref Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+      --intervals Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+      --bam alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+      > alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.coverage.tsv
+    
+    #generate tdf file
+    module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/igvtools/2.3.67 && \
+     java -Xmx8G  -Djava.awt.headless=true -jar $IGVTOOLS_JAR count -f min,max,mean -w 25 \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.tdf \
+      Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa.fai
+
+
+
+Reference Genome and Software Versions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Reference Genome:** Severe acute respiratory syndrome coronavirus 2 isolate Wuhan-Hu-1 (GenBank MN908947.3)
+
+**Software versions**
+::
+
+    Cutadapt v2.10
+    bwa-mem v0.7.17
+    sambamba v0.7.0
+    ivar v1.2.2
+    samtools v1.9
+    bvatools v1.6
+    bedtools v2.29.2
+    GATK v4.1.2 and v3.8
+    igvtools v2.3.67

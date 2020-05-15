@@ -1,21 +1,26 @@
 .. McGill COVID-19 Sequencing SOP documentation master file, created by J.H. Galvez
    sphinx-quickstart on Fri May 15 09:41:22 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-McGill COVID-19 Sequencing documentation
+
+McGill SARS-CoV2 Project Documentation
 ==========================================================
+
+The following documentation covers the analysis procedures for the SARS-CoV2 projects: 
+
+    - **Quebec SARS-CoV2 Sequencing Project** (*CoVSeQ*) 
+    - **Quebec COVID-19 BioBank Project**
+
+-----
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
-   Nanopore_SOP/overview
-   MGI_SOP/overview
-   Illumina_SOP/overview
+  
+   SARS_CoV2_Sequencing/about
+   SARS_CoV2_Sequencing/ONT_overview
+   SARS_CoV2_Sequencing/MGI_overview
+   SARS_CoV2_Sequencing/Illumina_overview
+   COVID19_BioBank/overview
 
 
-Indices and tables
-==================
 
-* :ref:`search`
