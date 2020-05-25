@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -172,14 +172,14 @@
 <div class="section" id="steps">
 <h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><strong>Trim sequencing adaptor with cutadapt</strong></li>
+<li><p><strong>Trim sequencing adaptor with</strong> <code class="docutils literal notranslate"><span class="pre">cutadapt</span></code></p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cutadapt -g GAACGACATGGCTACGATCCGACTT \
   -G GACCGCTTGGCCTCCGACTT \
   -a AAGTCGGAGGCCAAGCGGTC \
   -A AAGTCGGATCGTAGCCATGTCGTTC \
-  -j 15 \
-  -e 0.1 -O 9 -m 20 -n 2 \
+  -j 24 \
+  -e 0.1 -O 9 -m 20 -n 2 --quality-cutoff 33 \
   -o trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz \
   -p trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz  \
  ${INPUT_FASTQ1}  \
@@ -187,95 +187,101 @@
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><strong>Align read with BWA-MEM</strong></li>
+<li><p><strong>Align read with</strong> <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> <strong>and filter the bam file</strong></p></li>
 </ol>
-<p>Multimapping reads are filtered (<code class="docutils literal notranslate"><span class="pre">MAPQ</span> <span class="pre">=</span> <span class="pre">0</span></code>).:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p alignment/${SAMPLE}/${SAMPLE} &amp;&amp; \
-bwa mem  \
-  -K 100000000 -v 3 -t 15 -Y \
-  -R &#39;@RG\tID:${SAMPLE}\tSM:${SAMPLE}\tLB:PROD_000034-A12\tPU:run1_4\tCN:\tPL:MGI&#39; \
+<p>2.1 Multimapping reads are aligned with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> and sorted with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>bwa mem  \
+  -K 100000000 -v 3 -t 18 -Y \
+  -R &#39;@RG\tID:${SAMPLE}\tSM:${SAMPLE}\tLB:${LIBRARY}\tPU:run1_2\tCN:McGill University and Genome Quebec Innovation Centre\tPL:MGI&#39; \
+  Coronavirinae.SARS-CoV-2/genome/bwa_index/Coronavirinae.SARS-CoV-2.fa \
+  trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz \
+  trim/${SAMPLE}/${SAMPLE}.trim.pair2.fastq.gz | \
+sambamba view -S -f bam \
+  /dev/stdin | \
+sambamba sort  \
+  /dev/stdin \
+  --out alignment/${SAMPLE}/${SAMPLE}.sorted.bam &amp;&amp; \
+sambamba index  \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.bam \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.bam.bai
+</pre></div>
+</div>
+<p>2.2 Mapped reads are filtered with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code> and <code class="docutils literal notranslate"><span class="pre">awk</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sambamba view -h \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.bam | \
+awk &#39;substr($0,1,1)==&quot;@&quot; || ($9 &gt;= 60 &amp;&amp; $9 &lt;= 300) || ($9 &lt;= -60 &amp;&amp; $9 &gt;= -300)&#39; | \
+sambamba view -S -f bam -F &quot;not failed_quality_control and not unmapped and not secondary_alignment and mapping_quality &gt; 0 and not supplementary and not (((mate_is_reverse_strand and reverse_strand) or (not reverse_strand and not mate_is_reverse_strand)))&quot; \
+  /dev/stdin \
+  -o alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.bam
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><strong>Trim Amplicon PCR primers</strong></li>
+<li><p><strong>Trim Amplicon primers with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p></li>
 </ol>
-<p>Using <code class="docutils literal notranslate"><span class="pre">ivar</span></code> with the <code class="docutils literal notranslate"><span class="pre">-e</span></code> parameter.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p alignment/${SAMPLE} &amp;&amp; \
-ivar trim -i alignment/${SAMPLE}/${SAMPLE}.sorted.bam
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ivar trim -i alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.bam \
   -p alignment/${SAMPLE}/${SAMPLE}.primerTrim \
-  -b Coronavirinae.SARS-CoV-2/PGD99s.ampInfo.bed \
+  -b Coronavirinae.SARS-CoV-2/PGD99s.ampInfo_+-.bed \
   -m 30 -q 20 -s 4 -e &amp;&amp; \
-sambamba sort -m 10G \
+sambamba sort  \
   alignment/${SAMPLE}/${SAMPLE}.primerTrim.bam \
-  --tmpdir ${TMPDIR} \
-  --out alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam
+  --out alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam
 </pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li><strong>Call variants</strong></li>
+<li><p><strong>Call variants with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p></li>
 </ol>
-<p>Variants are called with <code class="docutils literal notranslate"><span class="pre">samtools</span></code> and <code class="docutils literal notranslate"><span class="pre">ivar</span></code>.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p alignment/${SAMPLE} &amp;&amp; \
-samtools mpileup -A -d 600000 -B -Q 0 -l Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
-  -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam | \
-ivar variants -p alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim \
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>samtools mpileup -aa -A -d 600000 -B -Q 0 -l Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+  -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam | \
+ivar variants -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim \
   -r Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
   -g Coronavirinae.SARS-CoV-2/SARS-CoV-2.gff3 \
   -m 20 -q 20 -t 0.5 &amp;&amp; \
-ivar_variants_to_vcf.py alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.tsv alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf &amp;&amp; \
-bgzip -cf alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf &gt; alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf.gz &amp;&amp; \
-tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.vcf.gz
+ivar_variants_to_vcf.py alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.tsv alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf &amp;&amp; \
+bgzip -cf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf &gt; \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz &amp;&amp; \
+tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz
 </pre></div>
 </div>
 <ol class="arabic simple" start="5">
-<li><strong>Generate consensus FASTA</strong></li>
+<li><p><strong>Generate consensus FASTA with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p></li>
 </ol>
-<p>Using <code class="docutils literal notranslate"><span class="pre">ivar</span> <span class="pre">consensus</span></code>.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p alignment/${SAMPLE} &amp;&amp; \
-samtools mpileup -aa -A -d 0 -Q 0 \
-  -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam | \
-ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.consensus -q 20 -t 0 -m
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>samtools mpileup -aa -A -d 600000 -Q 0 \
+  -f path/to/Coronavirinae.SARS-CoV-2.fa \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam | \
+ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus -q 20 -t 0.5 -m 10
 </pre></div>
 </div>
 <ol class="arabic simple" start="6">
-<li><strong>Compute metrics</strong></li>
+<li><p><strong>Compute metrics</strong></p></li>
 </ol>
 <p>A series of scripts compute several metrics derived from the output of the analysis above. Here are the full set
 of commands used to generate these metrics.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#alignment and insert size metrics
-module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 mugqic/R_Bioconductor/3.6.1_3.10 &amp;&amp; \
-mkdir -p metrics/dna/${SAMPLE}/picard_metrics &amp;&amp; \
 gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
   CollectMultipleMetrics \
   --PROGRAM=CollectAlignmentSummaryMetrics \
   --PROGRAM=CollectInsertSizeMetrics \
   --VALIDATION_STRINGENCY=SILENT \
-  --TMP_DIR=${TMPDIR} \
   --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
   --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
   --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.all.metrics \
   --MAX_RECORDS_IN_RAM=1000000
 
 #OxoG metrics
-module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 mugqic/R_Bioconductor/3.6.1_3.10 &amp;&amp; \
-mkdir -p metrics/dna/${SAMPLE}/picard_metrics &amp;&amp; \
 gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
   CollectOxoGMetrics \
   --VALIDATION_STRINGENCY=SILENT  \
-  --TMP_DIR=${TMPDIR} \
   --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
   --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.oxog_metrics.txt \
   --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
   --MAX_RECORDS_IN_RAM=4000000
 
 #GC biais metrics
-module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 mugqic/R_Bioconductor/3.6.1_3.10 &amp;&amp; \
-mkdir -p metrics/dna/${SAMPLE}/picard_metrics &amp;&amp; \
 gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
   CollectGcBiasMetrics \
   --VALIDATION_STRINGENCY=SILENT \
   --ALSO_IGNORE_DUPLICATES=TRUE \
-  --TMP_DIR=${TMPDIR} \
   --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
   --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_metrics.txt \
   --CHART=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_metrics.pdf \
@@ -284,30 +290,22 @@ gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Ds
   --MAX_RECORDS_IN_RAM=4000000
 
 #qualimap metrics
-module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/qualimap/2.2.1 &amp;&amp; \
-mkdir -p metrics/dna/${SAMPLE}/qualimap &amp;&amp; \
 qualimap bamqc -nt 10 \
   -bam alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam -outdir metrics/dna/${SAMPLE}/qualimap \
   --java-mem-size=55G
 
 #flagstats metrics primerTrimed
-module load mugqic/sambamba/0.7.0 &amp;&amp; \
-mkdir -p metrics/dna/${SAMPLE}/flagstat &amp;&amp; \
 sambamba flagstat  \
   alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
   &gt; metrics/dna/${SAMPLE}/flagstat/${SAMPLE}.sorted.primerTrim.flagstat
 
 #bedGraph generation primerTrimmed
-module load mugqic_dev/bedtools/2.29.2 &amp;&amp; \
-mkdir -p alignment/${SAMPLE} &amp;&amp; \
 bedtools genomecov -bga \
   -ibam alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam &gt; alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.BedGraph
 
 #hs metrics
-module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/4.1.2.0 &amp;&amp; \
 gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
   CollectHsMetrics \
-  --TMP_DIR=${TMPDIR} \
   --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
   --OUTPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.onTarget.tsv \
   --BAIT_INTERVALS=Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.interval_list \
@@ -315,7 +313,6 @@ gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Ds
   --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa
 
 #depth of coverage
-module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/GenomeAnalysisTK/3.8 &amp;&amp; \
 java -Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=2 -Xmx8000M -jar $GATK_JAR \
   --analysis_type DepthOfCoverage --omitDepthOutputAtEachBase --logging_level ERROR \
   --reference_sequence Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
@@ -332,7 +329,6 @@ java -Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=2 -Xmx8000M -jar $GATK_JAR
   --nBins 499 \
   --downsampling_type NONE
 
-module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/bvatools/1.6 &amp;&amp; \
 java -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx31G -jar $BVATOOLS_JAR \
   depthofcoverage --gc --maxDepth 1001 --summaryCoverageThresholds 10,25,50,75,100,500,1000 --minMappingQuality 15 --minBaseQuality 15 --ommitN \
   --threads 8 \
@@ -342,8 +338,7 @@ java -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx31G -jar $BVATOOLS
   &gt; alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.coverage.tsv
 
 #generate tdf file
-module load mugqic/java/openjdk-jdk1.8.0_72 mugqic/igvtools/2.3.67 &amp;&amp; \
- java -Xmx8G  -Djava.awt.headless=true -jar $IGVTOOLS_JAR count -f min,max,mean -w 25 \
+java -Xmx8G  -Djava.awt.headless=true -jar $IGVTOOLS_JAR count -f min,max,mean -w 25 \
   alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
   alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.tdf \
   Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa.fai

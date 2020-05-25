@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -174,7 +174,7 @@ to be able to run in a High Performance Computing environment where the usage Co
 <div class="section" id="steps">
 <h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><strong>Base calling with Guppy</strong></li>
+<li><p><strong>Base calling with Guppy</strong></p></li>
 </ol>
 <p>Raw reads are base-called with Guppy using the High Accuracy Model (flip-flop) and a minimun quality
 threshold of <code class="docutils literal notranslate"><span class="pre">7</span></code>:</p>
@@ -200,7 +200,7 @@ guppy_basecaller --input_path ${INPUT} \
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><strong>Demultiplexing with Guppy</strong></li>
+<li><p><strong>Demultiplexing with Guppy</strong></p></li>
 </ol>
 <p>Reads were demultiplexed using Guppy. The option <code class="docutils literal notranslate"><span class="pre">--require_barcodes_both_ends</span></code> is activated. Since
 regular nanopore barcodes were used, the demultiplex command points to the nanopore barcode config files.:</p>
@@ -214,7 +214,7 @@ guppy_barcoder --require_barcodes_both_ends \
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><strong>ARTIC-Nanopolish pipeline</strong></li>
+<li><p><strong>ARTIC-Nanopolish pipeline</strong></p></li>
 </ol>
 <p>Since some HPC environments like Compute Canada don’t support python package managers like Conda, the python
 environment to use a tool like the ARTIC protocol needs to be defined initially, before running the pipeline.
@@ -301,13 +301,13 @@ muscle -in ${SAMPLE}.muscle.in.fasta -out ${SAMPLE}.muscle.out.fasta
 </pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li><strong>Create metrics</strong></li>
+<li><p><strong>Create metrics</strong></p></li>
 </ol>
 <p>For metrics generation, the following tools are run:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">samtools</span></code> for general alignment stats.</li>
-<li><code class="docutils literal notranslate"><span class="pre">bedtools</span></code> for coverage metrics</li>
-<li><code class="docutils literal notranslate"><span class="pre">WUB</span></code> for additional alignment metrics see this <a class="reference external" href="https://github.com/nanoporetech/wub">repository</a>.</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">samtools</span></code> for general alignment stats.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bedtools</span></code> for coverage metrics</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WUB</span></code> for additional alignment metrics see this <a class="reference external" href="https://github.com/nanoporetech/wub">repository</a>.</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>REFERENCE=&quot;/path/to/SARS-CoV2/reference.fasta&quot;
 SAMPLE=&quot;sample_name&quot;
