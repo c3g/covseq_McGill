@@ -84,30 +84,40 @@ Steps
 
 ::
 
-    samtools mpileup -aa -A -d 600000 -B -Q 0 -l Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
-      -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+    samtools mpileup -A -d 600000 -B -Q 0 \
+      -l Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+      --reference Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
       alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam | \
     ivar variants -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim \
       -r Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
-      -g Coronavirinae.SARS-CoV-2/SARS-CoV-2.gff3 \
-      -m 20 -q 20 -t 0.5 && \
+      -m 10 -q 20 -t 0.25 && \
     ivar_variants_to_vcf.py alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.tsv alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf && \
     bgzip -cf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf > \
       alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz && \
     tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz 
 
+5. **Annotate the variants with** ``SnpEff``
 
-5. **Generate consensus FASTA with** ``ivar`` **and** ``samtools``
+::
+
+    java -Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G \
+      -jar $SNPEFF_HOME/snpEff.jar -v -c $SNPEFF_HOME/snpEff.config MN908947.3 \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz > \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf && \
+    bgzip -cf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf > \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf.gz && \
+    tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf.gz
+
+6. **Generate consensus FASTA with** ``ivar`` **and** ``samtools``
 
 ::
 
     samtools mpileup -aa -A -d 600000 -Q 0 \
-      -f path/to/Coronavirinae.SARS-CoV-2.fa \
       alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam | \
-    ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus -q 20 -t 0.5 -m 10
+    ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus -q 20 -t 0.75 -m 10
 
 
-6. **Compute metrics** 
+7. **Compute metrics** 
 
 A series of scripts compute several metrics derived from the output of the analysis above. Here are the full set
 of commands used to generate these metrics.:: 
