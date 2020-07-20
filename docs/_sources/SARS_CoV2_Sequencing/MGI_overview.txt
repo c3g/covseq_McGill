@@ -18,7 +18,51 @@ The MGI analysis pipeline is based on the steps suggested by *Paragon Genomics*,
 Steps 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1. **Trim sequencing adaptor with** ``cutadapt``
+1. **Align read with** ``bwa mem`` **, filter out human reads on the bam file and convert to fastq**
+
+1.1 Raw reads are aligned with ``bwa mem`` and sorted by position with ``sambamba`` for merics
+
+::
+
+    bwa mem  \
+      -K 100000000 -v 3 -t 8 -Y \
+      -R '@RG\tID:${SAMPLE}\tSM:${SAMPLE}\tLB:${LIBRARY}\tPU:run1_2\tCN:McGill University and Genome Quebec Innovation Centre\tPL:MGI' \
+      Coronavirinae.SARS-CoV-2/genome/bwa_index/Hybrid.SARS-CoV-2.GRCh38.fa \
+      data/${SAMPLE}/${SAMPLE}.pair1.fastq.gz \
+      data/${SAMPLE}/${SAMPLE}.pair2.fastq.gz | \
+    sambamba view -S -f bam \
+      /dev/stdin | \
+    sambamba sort  \
+      /dev/stdin \
+      --out alignment/${SAMPLE}/${SAMPLE}.hybrid.sorted.bam
+
+1.2 Human mapped reads with a mapping quality > 0 are filtered out and then sorted by name with ``sambamba``
+
+::
+    
+    sambamba view \
+      -f bam -F "not (ref_name =~ /chr*/ and mapping_quality > 0)" \
+      host_removal/${SAMPLE}/${SAMPLE}_RAG936A8-12.hybrid.sorted.bam | \
+    sambamba sort \
+      -N \
+      /dev/stdin \
+      --out host_removal/${SAMPLE}/${SAMPLE}.host_removed.nsorted.bam
+
+1.3 Conversion of the bam filtered out and sorted by name into fastqs with ``samtools``
+
+::
+
+    samtools bam2fq \
+      -@ 10 \
+      -n \
+      -1 host_removal/${SAMPLE}/${SAMPLE}.host_removed.pair1.fastq.gz \
+      -2 host_removal/${SAMPLE}/${SAMPLE}.host_removed.pair2.fastq.gz \
+      -0 host_removal/${SAMPLE}/${SAMPLE}.host_removed.other.fastq.gz \
+      -s host_removal/${SAMPLE}/${SAMPLE}.host_removed.single.fastq.gz \
+      host_removal/${SAMPLE}/${SAMPLE}.host_removed.nsorted.bam
+
+
+2. **Trim sequencing adaptor with** ``cutadapt``
 
 ::
 
@@ -26,22 +70,22 @@ Steps
       -G GACCGCTTGGCCTCCGACTT \
       -a AAGTCGGAGGCCAAGCGGTC \
       -A AAGTCGGATCGTAGCCATGTCGTTC \
-      -j 24 \
+      -j 5 \
       -e 0.1 -O 9 -m 20 -n 2 --quality-cutoff 33 \
-      -o trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz \
-      -p trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz  \
-     ${INPUT_FASTQ1}  \
-     ${INPUT_FASTQ2} 
+      -o cleaned_raw_reads/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz \
+      -p cleaned_raw_reads/${SAMPLE}/${SAMPLE}.trim.pair2.fastq.gz  \
+      host_removal/${SAMPLE}/${SAMPLE}.host_removed.pair1.fastq.gz  \
+      host_removal/${SAMPLE}/${SAMPLE}.host_removed.pair2.fastq.gz 
 
 
-2. **Align read with** ``bwa mem`` **and filter the bam file**
+3. **Align read with** ``bwa mem`` **and filter the bam file**
 
-2.1 Multimapping reads are aligned with ``bwa mem`` and sorted with ``sambamba``
+3.1 Multimapping of the reads with ``bwa mem`` and sort with ``sambamba``
 
 ::
 
     bwa mem  \
-      -K 100000000 -v 3 -t 18 -Y \
+      -K 100000000 -v 3 -t 8 -Y \
       -R '@RG\tID:${SAMPLE}\tSM:${SAMPLE}\tLB:${LIBRARY}\tPU:run1_2\tCN:McGill University and Genome Quebec Innovation Centre\tPL:MGI' \
       Coronavirinae.SARS-CoV-2/genome/bwa_index/Coronavirinae.SARS-CoV-2.fa \
       trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz \
@@ -55,7 +99,7 @@ Steps
       alignment/${SAMPLE}/${SAMPLE}.sorted.bam \
       alignment/${SAMPLE}/${SAMPLE}.sorted.bam.bai
 
-2.2 Mapped reads are filtered with ``sambamba`` and ``awk``
+3.2 Mapped reads are filtered with ``sambamba`` and ``awk``
 
 ::
 
@@ -67,7 +111,7 @@ Steps
       -o alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.bam
 
 
-3. **Trim Amplicon primers with** ``ivar`` **and** ``samtools``
+4. **Trim Amplicon primers with** ``ivar`` **and** ``samtools``
 
 ::
 
@@ -80,40 +124,66 @@ Steps
       --out alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam
 
 
-4. **Call variants with** ``ivar`` **and** ``samtools``
+5. **Call variants with** ``ivar`` **and** ``samtools``
 
 ::
 
-    samtools mpileup -aa -A -d 600000 -B -Q 0 -l Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+    samtools mpileup -A -d 1000000 -B -Q 0 \
+      -l $MUGQIC_INSTALL_HOME_DEV/genomes/species/Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+      --reference Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
       -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
       alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam | \
     ivar variants -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim \
       -r Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
-      -g Coronavirinae.SARS-CoV-2/SARS-CoV-2.gff3 \
-      -m 20 -q 20 -t 0.5 && \
+      -m 10 -q 20 -t 0.25 && \
     ivar_variants_to_vcf.py alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.tsv alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf && \
-    bgzip -cf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf > \
+    bgzip -cf \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf > \
       alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz && \
-    tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz 
+    tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz
 
+6. **Annotate the variants with** ``SnpEff``
 
-5. **Generate consensus FASTA with** ``ivar`` **and** ``samtools``
+::
+
+    java -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G \
+      -jar $SNPEFF_HOME/snpEff.jar ann \
+      -v -c $SNPEFF_HOME/snpEff.config \
+      -s metrics/dna/${SAMPLE}/snpeff_metrics/${SAMPLE}.snpEff.html \
+      MN908947.3 \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz > \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf && \
+    bgzip -cf \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf > \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf.gz && \
+    tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf.gz
+
+7. **Generate consensus FASTA and rename header with** ``ivar`` **and** ``samtools``
+
+7.1 Consensus generation with** ``ivar`` **and** ``samtools``
 
 ::
 
     samtools mpileup -aa -A -d 600000 -Q 0 \
-      -f path/to/Coronavirinae.SARS-CoV-2.fa \
+      -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa
       alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam | \
-    ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus -q 20 -t 0.5 -m 10
+    ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus -q 20 -t 0.75 -m 10
 
+7.2 Renaming of header for GISAID submission
 
-6. **Compute metrics** 
+::
+
+    awk '/^>/{print ">Canada/Qc-${SAMPLE}_${PLATE}/${YEAR} seq_method:MGI_CleanPlex|assemb_method:ivar|snv_call_method:ivar"; next}{print}' < \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus.fa > \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus.gisaid_renamed.fa
+
+8. **Compute metrics** 
 
 A series of scripts compute several metrics derived from the output of the analysis above. Here are the full set
 of commands used to generate these metrics.:: 
 
     #alignment and insert size metrics
-    gatk --java-options "-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
+    gatk --java-options "-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
       CollectMultipleMetrics \
       --PROGRAM=CollectAlignmentSummaryMetrics \
       --PROGRAM=CollectInsertSizeMetrics \
@@ -124,7 +194,7 @@ of commands used to generate these metrics.::
       --MAX_RECORDS_IN_RAM=1000000
     
     #OxoG metrics
-    gatk --java-options "-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
+    gatk --java-options "-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
       CollectOxoGMetrics \
       --VALIDATION_STRINGENCY=SILENT  \
       --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
@@ -133,7 +203,7 @@ of commands used to generate these metrics.::
       --MAX_RECORDS_IN_RAM=4000000
     
     #GC biais metrics
-    gatk --java-options "-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
+    gatk --java-options "-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
       CollectGcBiasMetrics \
       --VALIDATION_STRINGENCY=SILENT \
       --ALSO_IGNORE_DUPLICATES=TRUE \
@@ -159,7 +229,7 @@ of commands used to generate these metrics.::
       -ibam alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam > alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.BedGraph
     
     #hs metrics
-    gatk --java-options "-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
+    gatk --java-options "-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
       CollectHsMetrics \
       --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
       --OUTPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.onTarget.tsv \
@@ -168,7 +238,7 @@ of commands used to generate these metrics.::
       --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa
     
     #depth of coverage
-    java -Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=2 -Xmx8000M -jar $GATK_JAR \
+    java -XX:ParallelGCThreads=2 -Xmx8000M -jar $GATK_JAR \
       --analysis_type DepthOfCoverage --omitDepthOutputAtEachBase --logging_level ERROR \
       --reference_sequence Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
       --input_file alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
@@ -198,6 +268,12 @@ of commands used to generate these metrics.::
       alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.tdf \
       Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa.fai
 
+    #generate quast metrics
+    quast.py -r Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+      --output-dir metrics/dna/${SAMPLE}/quast_metrics \
+      --threads 5 \
+      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus.gisaid_renamed.fa
+
 
 
 Reference Genome and Software Versions
@@ -208,12 +284,16 @@ Reference Genome and Software Versions
 **Software versions**
 ::
 
-    Cutadapt v2.10
-    bwa-mem v0.7.17
-    sambamba v0.7.0
-    ivar v1.2.2
-    samtools v1.9
-    bvatools v1.6
     bedtools v2.29.2
+    bvatools v1.6
+    bwa v0.7.17
+    cutadapt v2.10
     GATK v4.1.2 and v3.8
     igvtools v2.3.67
+    ivar v1.2.2
+    qualimap v2.2.1
+    quast v5.0.2
+    sambamba v0.7.0
+    samtools v1.9
+    snpEff v4.5covid19
+    

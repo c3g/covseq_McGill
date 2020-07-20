@@ -172,26 +172,64 @@
 <div class="section" id="steps">
 <h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
+<li><p><strong>Align read with</strong> <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> <strong>, filter out human reads on the bam file and convert to fastq</strong></p></li>
+</ol>
+<p>1.1 Raw reads are aligned with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> and sorted by position with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code> for merics</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>bwa mem  \
+  -K 100000000 -v 3 -t 8 -Y \
+  -R &#39;@RG\tID:${SAMPLE}\tSM:${SAMPLE}\tLB:${LIBRARY}\tPU:run1_2\tCN:McGill University and Genome Quebec Innovation Centre\tPL:MGI&#39; \
+  Coronavirinae.SARS-CoV-2/genome/bwa_index/Hybrid.SARS-CoV-2.GRCh38.fa \
+  data/${SAMPLE}/${SAMPLE}.pair1.fastq.gz \
+  data/${SAMPLE}/${SAMPLE}.pair2.fastq.gz | \
+sambamba view -S -f bam \
+  /dev/stdin | \
+sambamba sort  \
+  /dev/stdin \
+  --out alignment/${SAMPLE}/${SAMPLE}.hybrid.sorted.bam
+</pre></div>
+</div>
+<p>1.2 Human mapped reads with a mapping quality &gt; 0 are filtered out and then sorted by name with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sambamba view \
+  -f bam -F &quot;not (ref_name =~ /chr*/ and mapping_quality &gt; 0)&quot; \
+  host_removal/${SAMPLE}/${SAMPLE}_RAG936A8-12.hybrid.sorted.bam | \
+sambamba sort \
+  -N \
+  /dev/stdin \
+  --out host_removal/${SAMPLE}/${SAMPLE}.host_removed.nsorted.bam
+</pre></div>
+</div>
+<p>1.3 Conversion of the bam filtered out and sorted by name into fastqs with <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>samtools bam2fq \
+  -@ 10 \
+  -n \
+  -1 host_removal/${SAMPLE}/${SAMPLE}.host_removed.pair1.fastq.gz \
+  -2 host_removal/${SAMPLE}/${SAMPLE}.host_removed.pair2.fastq.gz \
+  -0 host_removal/${SAMPLE}/${SAMPLE}.host_removed.other.fastq.gz \
+  -s host_removal/${SAMPLE}/${SAMPLE}.host_removed.single.fastq.gz \
+  host_removal/${SAMPLE}/${SAMPLE}.host_removed.nsorted.bam
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
 <li><p><strong>Trim sequencing adaptor with</strong> <code class="docutils literal notranslate"><span class="pre">cutadapt</span></code></p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cutadapt -g GAACGACATGGCTACGATCCGACTT \
   -G GACCGCTTGGCCTCCGACTT \
   -a AAGTCGGAGGCCAAGCGGTC \
   -A AAGTCGGATCGTAGCCATGTCGTTC \
-  -j 24 \
+  -j 5 \
   -e 0.1 -O 9 -m 20 -n 2 --quality-cutoff 33 \
-  -o trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz \
-  -p trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz  \
- ${INPUT_FASTQ1}  \
- ${INPUT_FASTQ2}
+  -o cleaned_raw_reads/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz \
+  -p cleaned_raw_reads/${SAMPLE}/${SAMPLE}.trim.pair2.fastq.gz  \
+  host_removal/${SAMPLE}/${SAMPLE}.host_removed.pair1.fastq.gz  \
+  host_removal/${SAMPLE}/${SAMPLE}.host_removed.pair2.fastq.gz
 </pre></div>
 </div>
-<ol class="arabic simple" start="2">
+<ol class="arabic simple" start="3">
 <li><p><strong>Align read with</strong> <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> <strong>and filter the bam file</strong></p></li>
 </ol>
-<p>2.1 Multimapping reads are aligned with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> and sorted with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code></p>
+<p>3.1 Multimapping of the reads with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> and sort with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>bwa mem  \
-  -K 100000000 -v 3 -t 18 -Y \
+  -K 100000000 -v 3 -t 8 -Y \
   -R &#39;@RG\tID:${SAMPLE}\tSM:${SAMPLE}\tLB:${LIBRARY}\tPU:run1_2\tCN:McGill University and Genome Quebec Innovation Centre\tPL:MGI&#39; \
   Coronavirinae.SARS-CoV-2/genome/bwa_index/Coronavirinae.SARS-CoV-2.fa \
   trim/${SAMPLE}/${SAMPLE}.trim.pair1.fastq.gz \
@@ -206,7 +244,7 @@ sambamba index  \
   alignment/${SAMPLE}/${SAMPLE}.sorted.bam.bai
 </pre></div>
 </div>
-<p>2.2 Mapped reads are filtered with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code> and <code class="docutils literal notranslate"><span class="pre">awk</span></code></p>
+<p>3.2 Mapped reads are filtered with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code> and <code class="docutils literal notranslate"><span class="pre">awk</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sambamba view -h \
   alignment/${SAMPLE}/${SAMPLE}.sorted.bam | \
 awk &#39;substr($0,1,1)==&quot;@&quot; || ($9 &gt;= 60 &amp;&amp; $9 &lt;= 300) || ($9 &lt;= -60 &amp;&amp; $9 &gt;= -300)&#39; | \
@@ -215,7 +253,7 @@ sambamba view -S -f bam -F &quot;not failed_quality_control and not unmapped and
   -o alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.bam
 </pre></div>
 </div>
-<ol class="arabic simple" start="3">
+<ol class="arabic simple" start="4">
 <li><p><strong>Trim Amplicon primers with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ivar trim -i alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.bam \
@@ -227,38 +265,63 @@ sambamba sort  \
   --out alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam
 </pre></div>
 </div>
-<ol class="arabic simple" start="4">
+<ol class="arabic simple" start="5">
 <li><p><strong>Call variants with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>samtools mpileup -aa -A -d 600000 -B -Q 0 -l Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>samtools mpileup -A -d 1000000 -B -Q 0 \
+  -l $MUGQIC_INSTALL_HOME_DEV/genomes/species/Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
+  --reference Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
   -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
   alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam | \
 ivar variants -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim \
   -r Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
-  -g Coronavirinae.SARS-CoV-2/SARS-CoV-2.gff3 \
-  -m 20 -q 20 -t 0.5 &amp;&amp; \
+  -m 10 -q 20 -t 0.25 &amp;&amp; \
 ivar_variants_to_vcf.py alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.tsv alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf &amp;&amp; \
-bgzip -cf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf &gt; \
+bgzip -cf \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf &gt; \
   alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz &amp;&amp; \
 tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz
 </pre></div>
 </div>
-<ol class="arabic simple" start="5">
-<li><p><strong>Generate consensus FASTA with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p></li>
+<ol class="arabic simple" start="6">
+<li><p><strong>Annotate the variants with</strong> <code class="docutils literal notranslate"><span class="pre">SnpEff</span></code></p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>samtools mpileup -aa -A -d 600000 -Q 0 \
-  -f path/to/Coronavirinae.SARS-CoV-2.fa \
-  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam | \
-ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus -q 20 -t 0.5 -m 10
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G \
+  -jar $SNPEFF_HOME/snpEff.jar ann \
+  -v -c $SNPEFF_HOME/snpEff.config \
+  -s metrics/dna/${SAMPLE}/snpeff_metrics/${SAMPLE}.snpEff.html \
+  MN908947.3 \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz &gt; \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf &amp;&amp; \
+bgzip -cf \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf &gt; \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf.gz &amp;&amp; \
+tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf.gz
 </pre></div>
 </div>
-<ol class="arabic simple" start="6">
+<ol class="arabic simple" start="7">
+<li><p><strong>Generate consensus FASTA and rename header with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p></li>
+</ol>
+<p>7.1 Consensus generation with** <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>samtools mpileup -aa -A -d 600000 -Q 0 \
+  -f Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam | \
+ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus -q 20 -t 0.75 -m 10
+</pre></div>
+</div>
+<p>7.2 Renaming of header for GISAID submission</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>awk &#39;/^&gt;/{print &quot;&gt;Canada/Qc-${SAMPLE}_${PLATE}/${YEAR} seq_method:MGI_CleanPlex|assemb_method:ivar|snv_call_method:ivar&quot;; next}{print}&#39; &lt; \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus.fa &gt; \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus.gisaid_renamed.fa
+</pre></div>
+</div>
+<ol class="arabic simple" start="8">
 <li><p><strong>Compute metrics</strong></p></li>
 </ol>
 <p>A series of scripts compute several metrics derived from the output of the analysis above. Here are the full set
 of commands used to generate these metrics.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#alignment and insert size metrics
-gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+gatk --java-options &quot;-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
   CollectMultipleMetrics \
   --PROGRAM=CollectAlignmentSummaryMetrics \
   --PROGRAM=CollectInsertSizeMetrics \
@@ -269,7 +332,7 @@ gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Ds
   --MAX_RECORDS_IN_RAM=1000000
 
 #OxoG metrics
-gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+gatk --java-options &quot;-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
   CollectOxoGMetrics \
   --VALIDATION_STRINGENCY=SILENT  \
   --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
@@ -278,7 +341,7 @@ gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Ds
   --MAX_RECORDS_IN_RAM=4000000
 
 #GC biais metrics
-gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+gatk --java-options &quot;-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
   CollectGcBiasMetrics \
   --VALIDATION_STRINGENCY=SILENT \
   --ALSO_IGNORE_DUPLICATES=TRUE \
@@ -304,7 +367,7 @@ bedtools genomecov -bga \
   -ibam alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam &gt; alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.BedGraph
 
 #hs metrics
-gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+gatk --java-options &quot;-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
   CollectHsMetrics \
   --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
   --OUTPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.onTarget.tsv \
@@ -313,7 +376,7 @@ gatk --java-options &quot;-Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=1 -Ds
   --REFERENCE_SEQUENCE=Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa
 
 #depth of coverage
-java -Djava.io.tmpdir=${TMPDIR} -XX:ParallelGCThreads=2 -Xmx8000M -jar $GATK_JAR \
+java -XX:ParallelGCThreads=2 -Xmx8000M -jar $GATK_JAR \
   --analysis_type DepthOfCoverage --omitDepthOutputAtEachBase --logging_level ERROR \
   --reference_sequence Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
   --input_file alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
@@ -342,6 +405,12 @@ java -Xmx8G  -Djava.awt.headless=true -jar $IGVTOOLS_JAR count -f min,max,mean -
   alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.bam \
   alignment/${SAMPLE}/${SAMPLE}.sorted.primerTrim.tdf \
   Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa.fai
+
+#generate quast metrics
+quast.py -r Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
+  --output-dir metrics/dna/${SAMPLE}/quast_metrics \
+  --threads 5 \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus.gisaid_renamed.fa
 </pre></div>
 </div>
 </div>
@@ -349,15 +418,18 @@ java -Xmx8G  -Djava.awt.headless=true -jar $IGVTOOLS_JAR count -f min,max,mean -
 <h3>Reference Genome and Software Versions<a class="headerlink" href="#reference-genome-and-software-versions" title="Permalink to this headline">¶</a></h3>
 <p><strong>Reference Genome:</strong> Severe acute respiratory syndrome coronavirus 2 isolate Wuhan-Hu-1 (GenBank MN908947.3)</p>
 <p><strong>Software versions</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Cutadapt</span> <span class="n">v2</span><span class="o">.</span><span class="mi">10</span>
-<span class="n">bwa</span><span class="o">-</span><span class="n">mem</span> <span class="n">v0</span><span class="o">.</span><span class="mf">7.17</span>
-<span class="n">sambamba</span> <span class="n">v0</span><span class="o">.</span><span class="mf">7.0</span>
-<span class="n">ivar</span> <span class="n">v1</span><span class="o">.</span><span class="mf">2.2</span>
-<span class="n">samtools</span> <span class="n">v1</span><span class="o">.</span><span class="mi">9</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bedtools</span> <span class="n">v2</span><span class="o">.</span><span class="mf">29.2</span>
 <span class="n">bvatools</span> <span class="n">v1</span><span class="o">.</span><span class="mi">6</span>
-<span class="n">bedtools</span> <span class="n">v2</span><span class="o">.</span><span class="mf">29.2</span>
+<span class="n">bwa</span> <span class="n">v0</span><span class="o">.</span><span class="mf">7.17</span>
+<span class="n">cutadapt</span> <span class="n">v2</span><span class="o">.</span><span class="mi">10</span>
 <span class="n">GATK</span> <span class="n">v4</span><span class="o">.</span><span class="mf">1.2</span> <span class="ow">and</span> <span class="n">v3</span><span class="o">.</span><span class="mi">8</span>
 <span class="n">igvtools</span> <span class="n">v2</span><span class="o">.</span><span class="mf">3.67</span>
+<span class="n">ivar</span> <span class="n">v1</span><span class="o">.</span><span class="mf">2.2</span>
+<span class="n">qualimap</span> <span class="n">v2</span><span class="o">.</span><span class="mf">2.1</span>
+<span class="n">quast</span> <span class="n">v5</span><span class="o">.</span><span class="mf">0.2</span>
+<span class="n">sambamba</span> <span class="n">v0</span><span class="o">.</span><span class="mf">7.0</span>
+<span class="n">samtools</span> <span class="n">v1</span><span class="o">.</span><span class="mi">9</span>
+<span class="n">snpEff</span> <span class="n">v4</span><span class="o">.</span><span class="mi">5</span><span class="n">covid19</span>
 </pre></div>
 </div>
 </div>
