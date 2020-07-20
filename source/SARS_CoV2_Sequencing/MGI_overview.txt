@@ -27,7 +27,7 @@ Steps
     bwa mem  \
       -K 100000000 -v 3 -t 8 -Y \
       -R '@RG\tID:${SAMPLE}\tSM:${SAMPLE}\tLB:${LIBRARY}\tPU:run1_2\tCN:McGill University and Genome Quebec Innovation Centre\tPL:MGI' \
-      Coronavirinae.SARS-CoV-2/genome/bwa_index/Coronavirinae.SARS-CoV-2.fa \
+      Coronavirinae.SARS-CoV-2/genome/bwa_index/Hybrid.SARS-CoV-2.GRCh38.fa \
       data/${SAMPLE}/${SAMPLE}.pair1.fastq.gz \
       data/${SAMPLE}/${SAMPLE}.pair2.fastq.gz | \
     sambamba view -S -f bam \
