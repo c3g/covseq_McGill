@@ -19,7 +19,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u'McGill COVID-19 Sequencing SOP'
+project = u'McGill COVID19 Projects Documentation'
 copyright = u'2020, C3G'
 author = u'C3G'
 

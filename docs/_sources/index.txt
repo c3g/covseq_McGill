@@ -2,25 +2,32 @@
    sphinx-quickstart on Fri May 15 09:41:22 2020.
 
 
-McGill SARS-CoV2 Project Documentation
+McGill COVID19 Projects Documentation
 ==========================================================
 
 The following documentation covers the analysis procedures for the SARS-CoV2 projects: 
 
     - **Quebec SARS-CoV2 Sequencing Project** (*CoVSeQ*) 
-    - **Quebec COVID-19 BioBank Project**
+    - **Quebec COVID19 HostSeq Project** 
 
 -----
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
+   :caption: CoVSeQ Project:
   
    SARS_CoV2_Sequencing/about
+   SARS_CoV2_Sequencing/Illumina_overview
    SARS_CoV2_Sequencing/ONT_overview
    SARS_CoV2_Sequencing/MGI_overview
-   SARS_CoV2_Sequencing/Illumina_overview
-   COVID19_BioBank/overview
+
+-----
+
+.. toctree::
+   :maxdepth: 1 
+   :caption: HostSeq Project:  
+
+   COVID19_HostSeq/about
 
 
 

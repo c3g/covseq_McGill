@@ -1,12 +1,19 @@
-Québec SARS-CoV-2 Sequencing Project
+About
 ================================================================================
 
-About
+CoVSeQ is the partnership for Québec SARS-CoV-2 sequencing. We receive funding from the CanCOGeN initiative through Genome Canada and from the Ministere de la santé et des services sociaux du Québec.
+
+For more information, please consult this `website`_.
+
+.. _website: https://covseq.ca/?lang=en
+
+
+À propos
 ________________________________________________________________________________
 
 CoVSeQ est le regroupement pour le séquençage du SARS-CoV-2 au Québec. Nous sommes financé par l'initiative RCanGéCO de Génome Canada et par le Ministère de la santé et des services sociaux du Québec.
 
----
+Pour plus d'informations, veuillez consulter ce `site`_.
 
-CoVSeQ is the partnership for Québec SARS-CoV-2 sequencing. We receive funding from the CanCOGeN initiative through Genome Canada and from the Ministere de la santé et des services sociaux du Québec.
+.. _site: https://covseq.ca/
 
