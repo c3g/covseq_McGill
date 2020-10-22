@@ -1,0 +1,528 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Illumina/MGI DNAseq WGS SOP &mdash; McGill COVID19 Projects Documentation  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="About" href="about.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> McGill COVID19 Projects Documentation
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">CoVSeQ Project:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../SARS_CoV2_Sequencing/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SARS_CoV2_Sequencing/Illumina_overview.html">Illumina ARTIC SOP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SARS_CoV2_Sequencing/ONT_overview.html">Nanopore ARTIC-Nanopolish SOP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SARS_CoV2_Sequencing/MGI_overview.html">MGI CleanPlex SOP</a></li>
+</ul>
+<p class="caption"><span class="caption-text">HostSeq Project:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Illumina/MGI DNAseq WGS SOP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#graphical-summary">Graphical summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#steps">Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-genome-and-software-versions">Reference Genome and Software Versions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">McGill COVID19 Projects Documentation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Illumina/MGI DNAseq WGS SOP</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/COVID19_HostSeq/Illumina_dnaseq_overview.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="illumina-mgi-dnaseq-wgs-sop">
+<h1>Illumina/MGI DNAseq WGS SOP<a class="headerlink" href="#illumina-mgi-dnaseq-wgs-sop" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="graphical-summary">
+<h2>Graphical summary<a class="headerlink" href="#graphical-summary" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/GenPipes_dnaseq_mugqic.png"><img alt="../_images/GenPipes_dnaseq_mugqic.png" class="align-center" src="../_images/GenPipes_dnaseq_mugqic.png" style="width: 821.4px; height: 275.0px;" /></a>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The Illumina DNASeq WGS analysis pipeline is based on <em>GATK</em> best practices with important modifications to improve performance.</p>
+<div class="section" id="steps">
+<h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Trim sequencing adaptors with quality and size selection <code class="docutils literal notranslate"><span class="pre">skewer</span></code></li>
+</ol>
+<p>1.1 Trim reads to remove low quality tail and apply size selection to remove small fragments</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>skewer --threads 7 --min 25 -q 25 --compress -f sanger \
+  -x trim/dnaseq_GM12878_chr19/adapter.tsv \
+  data/${SAMPLE}/${SAMPLE}.pair1.fastq.gz \
+  data/${SAMPLE}/${SAMPLE}.pair2.fastq.gz \
+  -o trim/${SAMPLE}/${SAMPLE}
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li>Align trimmed reads with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code>, and apply refinement steps to fix the heuristic of the aligner</li>
+</ol>
+<p>2.1 Trimmed reads are aligned with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> and sorted by position with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code> for downstream refinement steps</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>bwa mem \
+  -M -t 15 \
+  -R &#39;@RG\tID:${SAMPLE}tSM:${SAMPLE}\tLB:${LIBRARY}\tPU:run1_1\tCN:McGill University and Genome Quebec Innovation Centre\tPL:Illumina&#39; \
+  Homo_sapiens.GRCh38/genome/bwa_index/Homo_sapiens.GRCh38.fa \
+  data/${SAMPLE}/${SAMPLE}.pair1.trim.fastq.gz \
+  data/${SAMPLE}/${SAMPLE}.pair2.trim.fastq.gz | \
+sambamba view -S -f bam \
+  /dev/stdin | \
+sambamba sort  \
+  /dev/stdin \
+  --out alignment/${SAMPLE}/${SAMPLE}.sorted.bam &amp;&amp; \
+sambamba index  \
+ alignment/${SAMPLE}/${SAMPLE}.sorted.bam \
+ alignment/${SAMPLE}/${SAMPLE}.sorted.bam.bai
+</pre></div>
+</div>
+<p>2.2 Corrections to variant flanking indels is improved by doing local reassembly of regions surrounding indels</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:+UseParallelGC -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx6G -jar $GATK_JAR \
+    --analysis_type RealignerTargetCreator -nct 1 -nt 3 \
+    --reference_sequence Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    --input_file alignment/${SAMPLE}/${SAMPLE}.sorted.bam \
+    --known Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.Mills_and_1000G_gold_standard.indels.vcf.gz \
+    --out alignment/${SAMPLE}/realign/all.intervals &amp;&amp; \
+java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:+UseParallelGC -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx12G -jar $GATK_JAR \
+    --analysis_type IndelRealigner -nt 1 -nct 1 \
+    --reference_sequence Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    --input_file alignment/${SAMPLE}/${SAMPLE}.sorted.bam \
+    --targetIntervals alignment/${SAMPLE}/realign/all.intervals \
+    --knownAlleles Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.Mills_and_1000G_gold_standard.indels.vcf.gz \
+    --out alignment/${SAMPLE}/realign/all.bam \
+    --maxReadsInMemory 750000 &amp;&amp; \
+ln -s -f \
+    alignment/${SAMPLE}/realign/all.bam \
+    alignment/${SAMPLE}/${SAMPLE}.sorted.realigned.bam
+</pre></div>
+</div>
+<p>2.3 Marking of duplicate with <code class="docutils literal notranslate"><span class="pre">picard</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:+UseParallelGC -XX:ParallelGCThreads=2 -Dsamjdk.buffer_size=4194304 -Xmx16G -jar $PICARD_HOME/picard.jar \
+    MarkDuplicates \
+    REMOVE_DUPLICATES=false VALIDATION_STRINGENCY=SILENT CREATE_INDEX=true \
+    INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.realigned.bam \
+    OUTPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam \
+    METRICS_FILE=alignment/${SAMPLE}/${SAMPLE}.sorted.dup.metrics \
+    MAX_RECORDS_IN_RAM=1000000
+</pre></div>
+</div>
+<p>2.4 Base recalibration (BSQR) to detects and adjust base qualities of systematic errors made by the sequencing machine when it estimates the accuracy of each base call</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=1048576 -Xmx55G -jar $GATK_JAR \
+    --analysis_type BaseRecalibrator --bqsrBAQGapOpenPenalty 30 \
+    -nt 1 --num_cpu_threads_per_data_thread 12 \
+    --input_file alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam \
+    --reference_sequence Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa  \
+    --knownSites Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.dbSNP142.vcf.gz \
+    --knownSites Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.gnomad.exomes.r2.0.2.sites.no-VEP.nohist.tidy.vcf.gz \
+    --knownSites Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.Mills_and_1000G_gold_standard.indels.vcf.gz \
+    --out alignment/${SAMPLE}/${SAMPLE}.sorted.dup.recalibration_report.grp
+
+java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:+UseParallelGC -XX:ParallelGCThreads=4 -Dsamjdk.buffer_size=4194304 -Xmx30G -jar $GATK_JAR \
+    --analysis_type PrintReads --generate_md5 \
+    -nt 1 --num_cpu_threads_per_data_thread 5 \
+    --input_file alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam \
+    --reference_sequence /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    --BQSR alignment/${SAMPLE}/${SAMPLE}.sorted.dup.recalibration_report.grp \
+    --out alignment/${SAMPLE}/${SAMPLE}.sorted.dup.recal.bam
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li>Germline variant calling using <code class="docutils literal notranslate"><span class="pre">GATK</span> <span class="pre">Haplotype</span> <span class="pre">caller</span></code></li>
+</ol>
+<p>3.1 Variant calling is performed on individual samples in padded vcf mode (gVCF). Typically run by chromosome or groups of chromosomes depending on coverage of sequenced sample whereby higher coverage approaches one chromosome per job.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=1048576 -Xmx30G -jar $GATK_JAR \
+    --analysis_type HaplotypeCaller --useNewAFCalculator --emitRefConfidence GVCF -dt none -nct 1 -G StandardAnnotation -G StandardHCAnnotation \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    --reference_sequence /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    --input_file alignment/${SAMPLE}/${SAMPLE}.sorted.dup.recal.bam \
+    --out alignment/${SAMPLE}/rawHaplotypeCaller/${SAMPLE}.hc.g.vcf.gz
+
+java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=1048576 -Xmx30G -jar $GATK_JAR \
+    --analysis_type GenotypeGVCFs --useNewAFCalculator -G StandardAnnotation -G StandardHCAnnotation \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    --reference_sequence /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    --variant alignment/${SAMPLE}/rawHaplotypeCaller/${SAMPLE}.hc.g.vcf.gz \
+    --out alignment/${SAMPLE}/${SAMPLE}.hc.vcf.gz
+</pre></div>
+</div>
+<p>3.2 Joint calling of multiple N samples is preformed by <code class="docutils literal notranslate"><span class="pre">GATK</span> <span class="pre">combineGVCF</span></code> and <code class="docutils literal notranslate"><span class="pre">GATK</span> <span class="pre">GenotypeGVCFs</span></code>. Typically preformed on a run/flowcell level then merged again accross all runs/flowcells</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:+UseParallelGC -XX:ParallelGCThreads=4 -Dsamjdk.buffer_size=4194304 -Xmx24G -jar $GATK_JAR \
+    --analysis_type CombineGVCFs -G StandardAnnotation -G StandardHCAnnotation \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    --reference_sequence /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    --variant alignment/${SAMPLE1}/${SAMPLE1}.hc.g.vcf.gz \
+    --variant alignment/${SAMPLE2}/${SAMPLE2}.hc.g.vcf.gz \
+    --variant alignment/${SAMPLE_N}/${SAMPLE_N}.hc.g.vcf.gz \
+    --out variants/allSamples_run1.hc.g.vcf.gz
+
+java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=1048576 -Xmx30G -jar $GATK_JAR \
+    --analysis_type GenotypeGVCFs --useNewAFCalculator -G StandardAnnotation -G StandardHCAnnotation \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    --reference_sequence /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    --variant variants/allSamples_run1.hc.g.vcf.gz \
+    --out variants/allSamples_run1.hc.vcf.gz
+</pre></div>
+</div>
+<p>3.3 Jointed called variants from N samples are filtered using a variant recalibration step <a href="#id1"><span class="problematic" id="id2">``</span></a>GATK Variant Quality Score Recalibration (VQSR)` which uses known, highly validated variant resources (omni, 1000 Genomes, hapmap).  SNPs and INDELs are processed independently.</p>
+<p>3.3.1 Generate tranches</p>
+<p>SNP variant recalibration</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=1048576 -Xmx24G -jar $GATK_JAR \
+    --analysis_type VariantRecalibrator -nt 11 \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    --reference_sequence /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    -input variants/allSamples_run1.hc.vcf.gz \
+    -resource:hapmap,known=false,training=true,truth=true,prior=15.0 \ $MUGQIC_INSTALL_HOME_DEV/genomes/species/Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.hapmap_3.3.vcf.gz \
+    -resource:omni,known=false,training=true,truth=false,prior=12.0 \ $MUGQIC_INSTALL_HOME_DEV/genomes/species/Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.1000G_omni2.5.vcf.gz \
+    -resource:1000G,known=false,training=true,truth=false,prior=10.0 \ $MUGQIC_INSTALL_HOME_DEV/genomes/species/Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.1000G_phase1.snps.high_confidence.vcf.gz \
+    -resource:dbsnp,known=true,training=false,truth=false,prior=6.0 \ $MUGQIC_INSTALL_HOME_DEV/genomes/species/Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.dbSNP142.vcf.gz \
+    -an QD -an FS -an DP -an SOR -tranche 100.0 -tranche 99.9 -tranche 99.0 -tranche 90.0 -mode SNP \
+    --recal_file variants/allSamples.hc.snps.recal \
+    --tranches_file variants/allSamples.hc.snps.tranches  \
+    --rscript_file variants/allSamples.hc.snps.R
+</pre></div>
+</div>
+<p>INDEL variant recalibration</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=1048576 -Xmx24G -jar $GATK_JAR \
+    --analysis_type VariantRecalibrator -nt 11 \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    --reference_sequence /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    -input variants/allSamples_run1.hc.vcf.gz \
+    -resource:mills,known=false,training=true,truth=true,prior=12.0 \ $MUGQIC_INSTALL_HOME/genomes/species/Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.Mills_and_1000G_gold_standard.indels.vcf.gz \
+    -resource:dbsnp,known=true,training=false,truth=false,prior=2.0 \ $MUGQIC_INSTALL_HOME_DEV/genomes/species/Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.dbSNP142.vcf.gz -an QD -an DP -an FS -an SOR \
+    -tranche 100.0 -tranche 99.9 -tranche 99.0 -tranche 90.0 -mode INDEL \
+    --recal_file variants/allSamples.hc.indels.recal \
+    --tranches_file variants/allSamples.hc.indels.tranches  \
+    --rscript_file variants/allSamples.hc.indels.R
+</pre></div>
+</div>
+<p>3.3.2 Apply tranches</p>
+<p>SNPs</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=1048576 -Xmx24G -jar $GATK_JAR \
+    --analysis_type ApplyRecalibration -nt 11 \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    --reference_sequence /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    -input variants/allSamples_run1.hc.vcf.gz \
+    --ts_filter_level 99.5 -mode SNP \
+    --tranches_file variants/allSamples.hc.snps.tranches \
+    --recal_file variants/allSamples.hc.snps.recal \
+    --out variants/allSamples.hc.snps_raw_indels.vqsr.vcf.gz
+</pre></div>
+</div>
+<p>INDELs</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=1048576 -Xmx24G -jar $GATK_JAR \
+    --analysis_type ApplyRecalibration -nt 11 \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    --reference_sequence /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+    -input variants/allSamples.hc.snps_raw_indels.vqsr.vcf.gz \
+    --ts_filter_level 99.0 -mode INDEL \
+    --tranches_file variants/allSamples.hc.indels.tranches \
+    --recal_file variants/allSamples.hc.indels.recal \
+    --out variants/allSamples.hc.vqsr.vcf.gz
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li>Compute quality control metrics</li>
+</ol>
+<p>A series of scripts compute several metrics derived from the output of the analysis above. Here are the full set
+of commands used to generate these metrics.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#alignment and insert size metrics
+gatk --java-options &quot;-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+  CollectMultipleMetrics \
+  --PROGRAM=CollectAlignmentSummaryMetrics \
+  --PROGRAM=CollectInsertSizeMetrics \
+  --VALIDATION_STRINGENCY=SILENT \
+  --REFERENCE_SEQUENCE=/cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+  --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam \
+  --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.all.metrics \
+  --MAX_RECORDS_IN_RAM=1000000
+
+#OxoG metrics
+gatk --java-options &quot;-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+  CollectOxoGMetrics \
+  --VALIDATION_STRINGENCY=SILENT  \
+  --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam \
+  --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.oxog_metrics.txt \
+  --REFERENCE_SEQUENCE=/cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+  --MAX_RECORDS_IN_RAM=4000000
+
+#GC biais metrics
+gatk --java-options &quot;-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G&quot; \
+  CollectGcBiasMetrics \
+  --VALIDATION_STRINGENCY=SILENT \
+  --ALSO_IGNORE_DUPLICATES=TRUE \
+  --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam \
+  --OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_metrics.txt \
+  --CHART=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_metrics.pdf \
+  --SUMMARY_OUTPUT=metrics/dna/${SAMPLE}/picard_metrics/${SAMPLE}.qcbias_summary_metrics.txt \
+  --REFERENCE_SEQUENCE=/cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa \
+  --MAX_RECORDS_IN_RAM=4000000
+
+#qualimap metrics
+qualimap bamqc -nt 2 \
+  -bam alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam -outdir metrics/dna/${SAMPLE}/qualimap \
+  --java-mem-size=55G
+
+#bedGraph generation on mark duplication
+bedtools genomecov -bga \
+  -ibam alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam &gt; alignment/${SAMPLE}/${SAMPLE}.sorted.dup.BedGraph
+
+#generate tdf file
+java -Xmx8G  -Djava.awt.headless=true -jar $IGVTOOLS_JAR count -f min,max,mean -w 25 \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam \
+  alignment/${SAMPLE}/${SAMPLE}.sorted.dup.tdf \
+  /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/genome/Homo_sapiens.GRCh38.fa.fai
+
+#verifyBAMid to estimate contamination
+verifyBamID \
+    --vcf /cvmfs/soft.mugqic/CentOS6/genomes/species/Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.1000G_phase1.snps.high_confidence.EUR.vcf \
+    --bam alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam \
+    --out metrics/dna/${SAMPLE}/verifyBamId/${SAMPLE} \
+    --verbose --ignoreRG --noPhoneHome
+
+#vcftools
+vcftools --missing-indv \
+    --gzvcf variants/allSamples.hc.vcf.gz \
+    --out variants/allSamples
+
+#vcftools
+vcftools --depth \
+    --gzvcf variants/allSamples.hc.vcf.gz \
+    --out variants/allSamples
+
+#GATK4 CrosscheckFingerprints for sample mixup detection
+gatk --java-options &quot;-Djava.io.tmpdir=${SLURM_TMPDIR} -XX:+UseParallelGC -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 \
+    -Dsamjdk.use_async_io_read_samtools=true -Dsamjdk.use_async_io_write_samtools=true -Dsamjdk.use_async_io_write_tribble=false -Xmx16G&quot; \
+    CrosscheckFingerprints --NUM_THREADS 2 --EXIT_CODE_WHEN_MISMATCH 0 \
+    --VALIDATION_STRINGENCY SILENT \
+    --TMP_DIR ${SLURM_TMPDIR} \
+    --INPUT=alignment/${SAMPLE}/${SAMPLE}.sorted.dup.bam \
+    --HAPLOTYPE_MAP $MUGQIC_INSTALL_HOME/genomes/species/Homo_sapiens.GRCh38/annotations/Homo_sapiens.GRCh38.fingerprint.map \
+    --LOD_THRESHOLD 3.0 \
+    --OUTPUT=metrics/dna/sample.fingerprint
+
+gatk --java-options &quot;-Djava.io.tmpdir=${SLURM_TMPDIR} -XX:+UseParallelGC -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 \
+-Dsamjdk.use_async_io_read_samtools=true -Dsamjdk.use_async_io_write_samtools=true -Dsamjdk.use_async_io_write_tribble=false -Xmx16G&quot; \
+    ClusterCrosscheckMetrics  \
+    --VALIDATION_STRINGENCY SILENT \
+    --TMP_DIR ${SLURM_TMPDIR} \
+    --INPUT metrics/dna/sample.fingerprint \
+    --LOD_THRESHOLD 5.0 \
+    --OUTPUT=metrics/dna/cluster.fingerprints
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-genome-and-software-versions">
+<h3>Reference Genome and Software Versions<a class="headerlink" href="#reference-genome-and-software-versions" title="Permalink to this headline">¶</a></h3>
+<p><strong>Reference Genome:</strong> Genome Reference Consortium Human Build 38 patch release 13 (GenBank GCA_000001405.28)</p>
+<p><strong>Software versions</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">skewer</span> <span class="mf">0.2</span><span class="o">.</span><span class="mi">2</span>
+<span class="n">bwa</span> <span class="mf">0.7</span><span class="o">.</span><span class="mi">17</span>
+<span class="n">GATK</span> <span class="mf">4.1</span><span class="o">.</span><span class="mf">8.1</span> <span class="ow">and</span> <span class="mf">3.8</span>
+<span class="n">sambamba</span> <span class="mf">0.7</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">igvtools</span> <span class="mf">2.3</span><span class="o">.</span><span class="mi">67</span>
+<span class="n">java</span> <span class="mf">1.8</span><span class="o">.</span><span class="mi">0_72</span>
+<span class="n">picard</span> <span class="mf">2.23</span><span class="o">.</span><span class="mi">3</span>
+<span class="n">python</span> <span class="mf">2.7</span><span class="o">.</span><span class="mi">14</span>
+<span class="n">R</span> <span class="mf">3.5</span><span class="o">.</span><span class="mf">1_3.7</span>
+<span class="n">samtools</span> <span class="mf">1.9</span>
+<span class="n">bcftools</span> <span class="mf">1.9</span>
+<span class="n">htslib</span> <span class="mf">1.9</span>
+<span class="n">snpeff</span> <span class="mf">4.3</span>
+<span class="n">qualimap</span> <span class="mf">2.2</span><span class="o">.</span><span class="mi">2</span><span class="n">dev</span>
+<span class="n">fastqc</span> <span class="mf">0.11</span><span class="o">.</span><span class="mi">5</span>
+<span class="n">verifyBAMid</span> <span class="mf">1.1</span><span class="o">.</span><span class="mi">3</span>
+<span class="n">bedtools</span> <span class="mf">2.29</span><span class="o">.</span><span class="mi">2</span>
+<span class="n">bvatools</span> <span class="mf">1.6</span>
+<span class="n">vcftools</span> <span class="mf">0.1</span><span class="o">.</span><span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="about.html" class="btn btn-neutral float-left" title="About" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, C3G
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

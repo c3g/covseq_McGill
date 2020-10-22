@@ -28,6 +28,6 @@ The following documentation covers the analysis procedures for the SARS-CoV2 pro
    :caption: HostSeq Project:  
 
    COVID19_HostSeq/about
-
-
+   COVID19_HostSeq/Illumina_dnaseq_overview
+   
 

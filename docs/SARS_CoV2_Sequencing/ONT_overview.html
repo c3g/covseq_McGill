@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -26,10 +26,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="MGI CleanPlex SOP" href="MGI_overview.html" />
-    <link rel="prev" title="Québec SARS-CoV-2 Sequencing Project" href="about.html" /> 
+    <link rel="prev" title="Illumina ARTIC SOP" href="Illumina_overview.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -84,7 +84,8 @@
             
               <p class="caption"><span class="caption-text">CoVSeQ Project:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="about.html">Québec SARS-CoV-2 Sequencing Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Illumina_overview.html">Illumina ARTIC SOP</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Nanopore ARTIC-Nanopolish SOP</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#graphical-summary">Graphical summary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#description">Description</a><ul>
@@ -95,11 +96,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="MGI_overview.html">MGI CleanPlex SOP</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Illumina_overview.html">Illumina ARTIC SOP</a></li>
 </ul>
 <p class="caption"><span class="caption-text">HostSeq Project:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../COVID19_BioBank/overview.html">Québec COVID19 BioBank Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../COVID19_HostSeq/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../COVID19_HostSeq/Illumina_dnaseq_overview.html">Illumina/MGI DNAseq WGS SOP</a></li>
 </ul>
 
             
@@ -180,7 +181,7 @@ to be able to run in a High Performance Computing environment where the usage Co
 <div class="section" id="steps">
 <h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><p><strong>Base calling with Guppy</strong></p></li>
+<li><strong>Base calling with Guppy</strong></li>
 </ol>
 <p>Raw reads are base-called with Guppy using the High Accuracy Model (flip-flop) and a minimun quality
 threshold of <code class="docutils literal notranslate"><span class="pre">7</span></code>:</p>
@@ -206,7 +207,7 @@ guppy_basecaller --input_path ${INPUT} \
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p><strong>Demultiplexing with Guppy</strong></p></li>
+<li><strong>Demultiplexing with Guppy</strong></li>
 </ol>
 <p>Reads were demultiplexed using Guppy. The option <code class="docutils literal notranslate"><span class="pre">--require_barcodes_both_ends</span></code> is activated. Since
 regular nanopore barcodes were used, the demultiplex command points to the nanopore barcode config files.:</p>
@@ -220,7 +221,7 @@ guppy_barcoder --require_barcodes_both_ends \
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p><strong>ARTIC-Nanopolish pipeline</strong></p></li>
+<li><strong>ARTIC-Nanopolish pipeline</strong></li>
 </ol>
 <p>Since some HPC environments like Compute Canada don’t support python package managers like Conda, the python
 environment to use a tool like the ARTIC protocol needs to be defined initially, before running the pipeline.
@@ -307,13 +308,13 @@ muscle -in ${SAMPLE}.muscle.in.fasta -out ${SAMPLE}.muscle.out.fasta
 </pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li><p><strong>Create metrics</strong></p></li>
+<li><strong>Create metrics</strong></li>
 </ol>
 <p>For metrics generation, the following tools are run:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">samtools</span></code> for general alignment stats.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">bedtools</span></code> for coverage metrics</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WUB</span></code> for additional alignment metrics see this <a class="reference external" href="https://github.com/nanoporetech/wub">repository</a>.</p></li>
+<li><code class="docutils literal notranslate"><span class="pre">samtools</span></code> for general alignment stats.</li>
+<li><code class="docutils literal notranslate"><span class="pre">bedtools</span></code> for coverage metrics</li>
+<li><code class="docutils literal notranslate"><span class="pre">WUB</span></code> for additional alignment metrics see this <a class="reference external" href="https://github.com/nanoporetech/wub">repository</a>.</li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>REFERENCE=&quot;/path/to/SARS-CoV2/reference.fasta&quot;
 SAMPLE=&quot;sample_name&quot;
@@ -371,7 +372,7 @@ python ${WUB}/scripts/bam_alignment_qc.py -f ${REFERENCE} ${SAMPLE}.nosup.sorted
         <a href="MGI_overview.html" class="btn btn-neutral float-right" title="MGI CleanPlex SOP" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="about.html" class="btn btn-neutral float-left" title="Québec SARS-CoV-2 Sequencing Project" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Illumina_overview.html" class="btn btn-neutral float-left" title="Illumina ARTIC SOP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

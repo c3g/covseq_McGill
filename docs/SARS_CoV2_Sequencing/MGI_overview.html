@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -26,17 +26,17 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Illumina ARTIC SOP" href="Illumina_overview.html" />
+    <link rel="next" title="About" href="../COVID19_HostSeq/about.html" />
     <link rel="prev" title="Nanopore ARTIC-Nanopolish SOP" href="ONT_overview.html" /> 
 </head>
 
@@ -84,7 +84,8 @@
             
               <p class="caption"><span class="caption-text">CoVSeQ Project:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="about.html">Québec SARS-CoV-2 Sequencing Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Illumina_overview.html">Illumina ARTIC SOP</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ONT_overview.html">Nanopore ARTIC-Nanopolish SOP</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">MGI CleanPlex SOP</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#graphical-summary">Graphical summary</a></li>
@@ -95,11 +96,11 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Illumina_overview.html">Illumina ARTIC SOP</a></li>
 </ul>
 <p class="caption"><span class="caption-text">HostSeq Project:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../COVID19_BioBank/overview.html">Québec COVID19 BioBank Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../COVID19_HostSeq/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../COVID19_HostSeq/Illumina_dnaseq_overview.html">Illumina/MGI DNAseq WGS SOP</a></li>
 </ul>
 
             
@@ -178,7 +179,7 @@
 <div class="section" id="steps">
 <h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><p><strong>Align read with</strong> <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> <strong>, filter out human reads on the bam file and convert to fastq</strong></p></li>
+<li><strong>Align read with</strong> <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> <strong>, filter out human reads on the bam file and convert to fastq</strong></li>
 </ol>
 <p>1.1 Raw reads are aligned with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> and sorted by position with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code> for merics</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>bwa mem  \
@@ -216,7 +217,7 @@ sambamba sort \
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p><strong>Trim sequencing adaptor with</strong> <code class="docutils literal notranslate"><span class="pre">cutadapt</span></code></p></li>
+<li><strong>Trim sequencing adaptor with</strong> <code class="docutils literal notranslate"><span class="pre">cutadapt</span></code></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cutadapt -g GAACGACATGGCTACGATCCGACTT \
   -G GACCGCTTGGCCTCCGACTT \
@@ -231,7 +232,7 @@ sambamba sort \
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p><strong>Align read with</strong> <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> <strong>and filter the bam file</strong></p></li>
+<li><strong>Align read with</strong> <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> <strong>and filter the bam file</strong></li>
 </ol>
 <p>3.1 Multimapping of the reads with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> and sort with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>bwa mem  \
@@ -260,7 +261,7 @@ sambamba view -S -f bam -F &quot;not failed_quality_control and not unmapped and
 </pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li><p><strong>Trim Amplicon primers with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p></li>
+<li><strong>Trim Amplicon primers with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ivar trim -i alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.bam \
   -p alignment/${SAMPLE}/${SAMPLE}.primerTrim \
@@ -272,7 +273,7 @@ sambamba sort  \
 </pre></div>
 </div>
 <ol class="arabic simple" start="5">
-<li><p><strong>Call variants with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p></li>
+<li><strong>Call variants with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>samtools mpileup -A -d 1000000 -B -Q 0 \
   -l $MUGQIC_INSTALL_HOME_DEV/genomes/species/Coronavirinae.SARS-CoV-2/SARSCoV2.ampInsert.bed \
@@ -290,7 +291,7 @@ tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.vcf.gz
 </pre></div>
 </div>
 <ol class="arabic simple" start="6">
-<li><p><strong>Annotate the variants with</strong> <code class="docutils literal notranslate"><span class="pre">SnpEff</span></code></p></li>
+<li><strong>Annotate the variants with</strong> <code class="docutils literal notranslate"><span class="pre">SnpEff</span></code></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G \
   -jar $SNPEFF_HOME/snpEff.jar ann \
@@ -306,7 +307,7 @@ tabix -pvcf alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vc
 </pre></div>
 </div>
 <ol class="arabic simple" start="7">
-<li><p><strong>Generate consensus FASTA and rename header with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p></li>
+<li><strong>Generate consensus FASTA and rename header with</strong> <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></li>
 </ol>
 <p>7.1 Consensus generation with** <code class="docutils literal notranslate"><span class="pre">ivar</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">samtools</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>samtools mpileup -aa -A -d 600000 -Q 0 \
@@ -322,7 +323,7 @@ ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.conse
 </pre></div>
 </div>
 <ol class="arabic simple" start="8">
-<li><p><strong>Compute metrics</strong></p></li>
+<li><strong>Compute metrics</strong></li>
 </ol>
 <p>A series of scripts compute several metrics derived from the output of the analysis above. Here are the full set
 of commands used to generate these metrics.:</p>
@@ -450,7 +451,7 @@ quast.py -r Coronavirinae.SARS-CoV-2/genome/Coronavirinae.SARS-CoV-2.fa \
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Illumina_overview.html" class="btn btn-neutral float-right" title="Illumina ARTIC SOP" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../COVID19_HostSeq/about.html" class="btn btn-neutral float-right" title="About" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="ONT_overview.html" class="btn btn-neutral float-left" title="Nanopore ARTIC-Nanopolish SOP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
