@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -26,10 +26,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -169,7 +169,7 @@
 <h1>Illumina/MGI DNAseq WGS SOP<a class="headerlink" href="#illumina-mgi-dnaseq-wgs-sop" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="graphical-summary">
 <h2>Graphical summary<a class="headerlink" href="#graphical-summary" title="Permalink to this headline">¶</a></h2>
-<a class="reference internal image-reference" href="../_images/GenPipes_dnaseq_mugqic.png"><img alt="../_images/GenPipes_dnaseq_mugqic.png" class="align-center" src="../_images/GenPipes_dnaseq_mugqic.png" style="width: 821.4px; height: 275.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/GenPipes_dnaseq_mugqic.png"><img alt="../_images/GenPipes_dnaseq_mugqic.png" class="align-center" src="../_images/GenPipes_dnaseq_mugqic.png" style="width: 821.4000000000001px; height: 275.0px;" /></a>
 </div>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
@@ -177,7 +177,7 @@
 <div class="section" id="steps">
 <h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li>Trim sequencing adaptors with quality and size selection <code class="docutils literal notranslate"><span class="pre">skewer</span></code></li>
+<li><p>Trim sequencing adaptors with quality and size selection <code class="docutils literal notranslate"><span class="pre">skewer</span></code></p></li>
 </ol>
 <p>1.1 Trim reads to remove low quality tail and apply size selection to remove small fragments</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>skewer --threads 7 --min 25 -q 25 --compress -f sanger \
@@ -188,7 +188,7 @@
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li>Align trimmed reads with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code>, and apply refinement steps to fix the heuristic of the aligner</li>
+<li><p>Align trimmed reads with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code>, and apply refinement steps to fix the heuristic of the aligner</p></li>
 </ol>
 <p>2.1 Trimmed reads are aligned with <code class="docutils literal notranslate"><span class="pre">bwa</span> <span class="pre">mem</span></code> and sorted by position with <code class="docutils literal notranslate"><span class="pre">sambamba</span></code> for downstream refinement steps</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>bwa mem \
@@ -258,7 +258,7 @@ java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:+UseParallelGC -XX:ParallelGCThreads=4
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li>Germline variant calling using <code class="docutils literal notranslate"><span class="pre">GATK</span> <span class="pre">Haplotype</span> <span class="pre">caller</span></code></li>
+<li><p>Germline variant calling using <code class="docutils literal notranslate"><span class="pre">GATK</span> <span class="pre">Haplotype</span> <span class="pre">caller</span></code></p></li>
 </ol>
 <p>3.1 Variant calling is performed on individual samples in padded vcf mode (gVCF). Typically run by chromosome or groups of chromosomes depending on coverage of sequenced sample whereby higher coverage approaches one chromosome per job.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=1048576 -Xmx30G -jar $GATK_JAR \
@@ -352,7 +352,7 @@ java -Djava.io.tmpdir=${SLURM_TMPDIR} -XX:ParallelGCThreads=1 -Dsamjdk.buffer_si
 </pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li>Compute quality control metrics</li>
+<li><p>Compute quality control metrics</p></li>
 </ol>
 <p>A series of scripts compute several metrics derived from the output of the analysis above. Here are the full set
 of commands used to generate these metrics.</p>

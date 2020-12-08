@@ -34,15 +34,15 @@ Steps
       /dev/stdin | \
     sambamba sort  \
       /dev/stdin \
-      --out alignment/${SAMPLE}/${SAMPLE}.hybrid.sorted.bam
+      --out host_removal/${SAMPLE}/${SAMPLE}.hybrid.sorted.bam
 
 1.2 Human mapped reads with a mapping quality > 0 are filtered out and then sorted by name with ``sambamba``
 
 ::
     
     sambamba view \
-      -f bam -F "not (ref_name =~ /chr*/ and mapping_quality > 0)" \
-      host_removal/${SAMPLE}/${SAMPLE}_RAG936A8-12.hybrid.sorted.bam | \
+      -f bam -F "not (ref_name =~ /chr*/ and mapping_quality >= 0)" \
+      host_removal/${SAMPLE}/${SAMPLE}.hybrid.sorted.bam | \
     sambamba sort \
       -N \
       /dev/stdin \
@@ -117,7 +117,8 @@ Steps
 
     ivar trim -i alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.bam \
       -p alignment/${SAMPLE}/${SAMPLE}.primerTrim \
-      -b Coronavirinae.SARS-CoV-2/artic_primers.bed \
+      -b Coronavirinae.SARS-CoV-2/Coronavirinae.SARS-CoV-2.Illumina_ARTIC_primers.bed \
+      -f Coronavirinae.SARS-CoV-2/Coronavirinae.SARS-CoV-2.Illumina_ARTIC_primerpair.tsv \
       -m 30 -q 20 -s 4 -e && \
     sambamba sort  \
       alignment/${SAMPLE}/${SAMPLE}.primerTrim.bam \
@@ -169,18 +170,39 @@ Steps
       alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.bam | \
     ivar consensus -p alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus -q 20 -t 0.75 -m 10
 
-7.2 Renaming of header for GISAID submission
+7.2 Renaming of header for GISAID submission and consensus file for flagging outlayers (too many Ns, frameshifts and/or low coverage)
 
 ::
+    
+    cons_len=`grep -oP "Total length \(>= 0 bp\)\t\K.*?(?=$)" metrics/dna/${SAMPLE}/quast_metrics/report.tsv`
+    N_count=`grep -oP "# N's\",\"quality\":\"Less is better\",\"values\":\[\K.*?(?=])" metrics/dna/${SAMPLE}/quast_metrics/report.html`
+    cons_perc_N=`echo "scale=2; 100*$N_count/$cons_len" | bc -l`
+    frameshift=`if grep -q "frameshift_variant" variant/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.annotate.vcf; then echo "FLAG"; fi`
+    genome_size=`awk '{print $2}' Coronavirinae.SARS-CoV-2/Coronavirinae.SARS-CoV-2.fa.fai`
+    bam_cov50X=`awk '{if ($4 > 50) {count = count + $3-$2}} END {if (count) {print count} else {print 0}}' alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.BedGraph`
+    bam_cov50X=`echo "scale=2; 100*$bam_cov50X/$genome_size" | bc -l`
+    STATUS=`awk -v bam_cov50X=$bam_cov50X -v frameshift=$frameshift -v cons_perc_N=$cons_perc_N 'BEGIN { if (cons_perc_N < 1 && frameshift != "FLAG" && bam_cov50X >= 90) {print "pass"} else if ((cons_perc_N >= 1 && cons_perc_N <= 5) || frameshift == "FLAG" || bam_cov50X < 90) {print "flag"} else if (cons_perc_N > 5) {print "rej"} }'`
+    export STATUS && \
+    awk '/^>/{print ">Canada/Qc-${SAMPLE}/2020 seq_method:Illumina_NexteraFlex|assemb_method:ivar|snv_call_method:ivar"; next}{print}' < consensus/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus.fa > consensus/${SAMPLE}/${SAMPLE}.consensus.illumina.${STATUS}.fasta
 
-    awk '/^>/{print ">Canada/Qc-${SAMPLE}_${PLATE}/${YEAR} seq_method:Illumina_NexteraFlex|assemb_method:ivar|snv_call_method:ivar"; next}{print}' < \
-      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus.fa > \
-      alignment/${SAMPLE}/${SAMPLE}.sorted.filtered.primerTrim.consensus.gisaid_renamed.fa
 
 8. **Compute metrics** 
 
-A series of scripts compute several metrics derived from the output of the analysis above. Here are the full set
+A series of scripts compute several metrics derived from the output of the analysis above. Those metrics are calculated at different steps in the pipeline and some are required for renaming the consensus file. Here are the full set
 of commands used to generate these metrics.:: 
+
+    #kraken2 metrics right after dehosting
+    kraken2 \
+      --quick \
+      --threads 5 \
+      --db kraken2-2.1.0/db \
+      --paired \
+      --unclassified-out metrics/dna/${SAMPLE}/kraken_metrics/${SAMPLE}.unclassified_sequences#.fastq \
+      --classified-out metrics/dna/${SAMPLE}/kraken_metrics/${SAMPLE}.classified_sequences#.fastq \
+      --output metrics/dna/${SAMPLE}/kraken_metrics/${SAMPLE}.kraken2_output \
+      --report metrics/dna/${SAMPLE}/kraken_metrics/${SAMPLE}.kraken2_report \
+      host_removal/${SAMPLE}/${SAMPLE}.host_removed.pair1.fastq.gz \
+      host_removal/${SAMPLE}/${SAMPLE}.host_removed.pair2.fastq.gz
 
     #alignment and insert size metrics
     gatk --java-options "-XX:ParallelGCThreads=1 -Dsamjdk.buffer_size=4194304 -Xmx20G" \
@@ -290,10 +312,11 @@ Reference Genome and Software Versions
     cutadapt v2.10
     GATK v4.1.2 and v3.8
     igvtools v2.3.67
-    ivar v1.2.2
+    ivar v1.3
+    kraken2 v2.1.0
     qualimap v2.2.1
     quast v5.0.2
     sambamba v0.7.0
-    samtools v1.9
+    samtools v1.11
     snpEff v4.5covid19
     
